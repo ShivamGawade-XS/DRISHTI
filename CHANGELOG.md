@@ -232,3 +232,4 @@
 - 2026-05-22 15:11: Add Adversarial Simulation Lab page
 - 2026-05-22 15:12: Design payload injection form
 - 2026-05-22 15:14: Add OTP Relay preset to adversarial lab
+- 2026-05-22 15:16: Add Mule Funnel and Night Burst presets
