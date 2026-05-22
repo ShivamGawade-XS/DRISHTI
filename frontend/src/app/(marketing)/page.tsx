@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
+import { HdfcLogo, AxisLogo, IciciLogo, KotakLogo, PaytmLogo, PhonePeLogo, CredLogo, YesBankLogo } from "@/components/BankLogos";
 
 export default function MarketingPage() {
   return (
@@ -45,15 +46,15 @@ export default function MarketingPage() {
           <div className="flex-1 overflow-hidden relative mask-edges">
             <div className="flex animate-marquee whitespace-nowrap gap-16 items-center">
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex gap-16 items-center text-sm font-bold font-mono text-ui-muted opacity-60">
-                  <span>HDFC BANK</span>
-                  <span>AXIS BANK</span>
-                  <span>ICICI BANK</span>
-                  <span>KOTAK MAHINDRA</span>
-                  <span>PAYTM</span>
-                  <span>PHONEPE</span>
-                  <span>CRED</span>
-                  <span>YES BANK</span>
+                <div key={i} className="flex gap-16 items-center text-ui-muted opacity-60">
+                  <HdfcLogo />
+                  <AxisLogo />
+                  <IciciLogo />
+                  <KotakLogo />
+                  <PaytmLogo />
+                  <PhonePeLogo />
+                  <CredLogo />
+                  <YesBankLogo />
                 </div>
               ))}
             </div>
