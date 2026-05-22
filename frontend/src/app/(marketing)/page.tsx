@@ -38,6 +38,29 @@ export default function MarketingPage() {
         </div>
       </section>
 
+      {/* HORIZONTAL MARQUEE SECTION */}
+      <section className="w-full border-b border-ui-border bg-[#050505] py-5 overflow-hidden flex items-center">
+        <div className="max-w-7xl mx-auto px-4 flex items-center w-full">
+          <span className="text-[10px] font-mono font-bold text-ui-muted uppercase tracking-widest mr-8 shrink-0">Securing Networks For</span>
+          <div className="flex-1 overflow-hidden relative mask-edges">
+            <div className="flex animate-marquee whitespace-nowrap gap-16 items-center">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-16 items-center text-sm font-bold font-mono text-ui-muted opacity-60">
+                  <span>HDFC BANK</span>
+                  <span>AXIS BANK</span>
+                  <span>ICICI BANK</span>
+                  <span>KOTAK MAHINDRA</span>
+                  <span>PAYTM</span>
+                  <span>PHONEPE</span>
+                  <span>CRED</span>
+                  <span>YES BANK</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 2. FEATURES SECTION */}
       <section id="features" className="w-full border-b border-ui-border py-24 md:py-32 bg-ui-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,46 +76,64 @@ export default function MarketingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <Card className="p-8 border border-ui-border bg-ui-card/50 flex flex-col justify-between h-full group hover:border-ui-accent transition-colors">
-              <div>
-                <div className="w-12 h-12 bg-ui-accent/10 border border-ui-accent/30 rounded-lg flex items-center justify-center text-ui-accent mb-6">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
+              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
+                <div>
+                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </div>
+                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">Sub-50ms Risk Scorer</h4>
+                  <p className="text-[15px] text-ui-muted leading-relaxed">
+                    FastAPI backend processes transaction payloads, executes ML scorer, applies deterministic fallbacks, and outputs a response in milliseconds.
+                  </p>
                 </div>
-                <h4 className="text-lg font-bold text-ui-text mb-3">Sub-50ms Risk Scorer</h4>
-                <p className="text-sm text-ui-muted leading-relaxed">
-                  FastAPI backend processes transaction payloads, executes ML scorer, applies deterministic fallbacks, and outputs a response in milliseconds.
-                </p>
+                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
+                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
+                  LGBM + XGBoost Scorer
+                </div>
               </div>
-              <div className="mt-6 text-xs font-mono text-ui-accent">LGBM + XGBoost Scorer</div>
-            </Card>
+            </div>
 
             {/* Feature 2 */}
-            <Card className="p-8 border border-ui-border bg-ui-card/50 flex flex-col justify-between h-full group hover:border-ui-accent transition-colors">
-              <div>
-                <div className="w-12 h-12 bg-ui-accent/10 border border-ui-accent/30 rounded-lg flex items-center justify-center text-ui-accent mb-6">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
+              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
+                <div>
+                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  </div>
+                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">Explorable Mule Graph</h4>
+                  <p className="text-[15px] text-ui-muted leading-relaxed">
+                    Continuous Louvain modularity detection isolates multi-hop mule rings funneling money out. Network topology graphs render instantly.
+                  </p>
                 </div>
-                <h4 className="text-lg font-bold text-ui-text mb-3">Explorable Mule Graph</h4>
-                <p className="text-sm text-ui-muted leading-relaxed">
-                  Continuous Louvain modularity detection isolates multi-hop mule rings funneling money out. Network topology graphs render instantly.
-                </p>
+                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
+                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
+                  Dynamic Louvain Community
+                </div>
               </div>
-              <div className="mt-6 text-xs font-mono text-ui-accent">Dynamic Louvain Community</div>
-            </Card>
+            </div>
 
             {/* Feature 3 */}
-            <Card className="p-8 border border-ui-border bg-ui-card/50 flex flex-col justify-between h-full group hover:border-ui-accent transition-colors">
-              <div>
-                <div className="w-12 h-12 bg-ui-accent/10 border border-ui-accent/30 rounded-lg flex items-center justify-center text-ui-accent mb-6">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
+              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
+                <div>
+                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                  </div>
+                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">SHAP Explainability</h4>
+                  <p className="text-[15px] text-ui-muted leading-relaxed">
+                    Converts mathematical SHAP values into simple narrative explanations in English and Hindi so operational staff can justify blocks immediately.
+                  </p>
                 </div>
-                <h4 className="text-lg font-bold text-ui-text mb-3">SHAP Explainability</h4>
-                <p className="text-sm text-ui-muted leading-relaxed">
-                  Converts mathematical SHAP values into simple narrative explanations in English and Hindi so operational staff can justify blocks immediately.
-                </p>
+                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
+                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
+                  Dynamic SHAP translations
+                </div>
               </div>
-              <div className="mt-6 text-xs font-mono text-ui-accent">Dynamic SHAP translations</div>
-            </Card>
+            </div>
           </div>
 
           {/* Feature Deep Dive */}
@@ -166,22 +207,22 @@ export default function MarketingPage() {
               </p>
               
               <div className="space-y-4 pt-4">
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-lg">
+                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
                   <h4 className="text-base font-bold text-ui-text mb-1">UPI Apps & FinTechs</h4>
                   <p className="text-xs text-ui-muted">Embed SDK telemetry to analyze device fingerprints and prevent SIM-swapping / OTP-relay vectors.</p>
                 </div>
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-lg">
+                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
                   <h4 className="text-base font-bold text-ui-text mb-1">Payment Gateways</h4>
                   <p className="text-xs text-ui-muted">Route real-time payment streams through our scoring API to drop merchant chargebacks by 45%.</p>
                 </div>
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-lg">
+                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
                   <h4 className="text-base font-bold text-ui-text mb-1">Retail Banking Core</h4>
                   <p className="text-xs text-ui-muted">Batch processing and continuous network community detection to uncover money mule networks and dormant accounts.</p>
                 </div>
               </div>
             </div>
             
-            <div className="w-full md:w-7/12 relative aspect-video bg-ui-card border border-ui-border rounded-xl flex items-center justify-center p-8 shadow-md">
+            <div className="w-full md:w-7/12 relative aspect-video bg-ui-card border border-ui-border rounded-sm flex items-center justify-center p-8 shadow-md">
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-ui-accent via-transparent to-transparent pointer-events-none"></div>
               <div className="text-center space-y-4 relative z-10">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-ui-riskRed bg-ui-riskRed/10 text-ui-riskRed font-mono text-xl mb-4 risk-pulse-red">
@@ -305,7 +346,7 @@ export default function MarketingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Resource 1 */}
             <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-lg mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
+              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
                 <span className="font-mono text-xs text-ui-accent font-bold">API REFERENCE</span>
               </div>
               <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Developer Quickstart</h4>
@@ -314,7 +355,7 @@ export default function MarketingPage() {
 
             {/* Resource 2 */}
             <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-lg mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
+              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
                 <span className="font-mono text-xs text-ui-accent font-bold">RESEARCH PAPER</span>
               </div>
               <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Multi-Hop Mule Ring Detection</h4>
@@ -323,7 +364,7 @@ export default function MarketingPage() {
 
             {/* Resource 3 */}
             <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-lg mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
+              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
                 <span className="font-mono text-xs text-ui-accent font-bold">CASE STUDY</span>
               </div>
               <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Retail Bank Integration</h4>
@@ -332,7 +373,7 @@ export default function MarketingPage() {
 
             {/* Resource 4 */}
             <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-lg mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
+              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
                 <span className="font-mono text-xs text-ui-accent font-bold">EXPLANATIONS</span>
               </div>
               <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Bilingual SHAP Explanations</h4>
@@ -358,3 +399,4 @@ export default function MarketingPage() {
     </div>
   );
 }
+
