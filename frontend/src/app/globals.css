@@ -264,3 +264,41 @@ input[type="range"]::-webkit-slider-thumb:hover {
   from { transform: translateY(30px); }
   to { transform: translateY(0); }
 }
+
+/* Ping for heatmap pulsing markers */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-ping {
+  animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Custom datetime-local dark mode */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(0.3) saturate(0.5);
+  cursor: pointer;
+}
+
+/* Adversarial Lab slider glow */
+input[type="range"]:focus-visible {
+  outline: none;
+}
+
+/* Active glow on card borders */
+.border-glow-red {
+  box-shadow: 0 0 20px rgba(224, 82, 67, 0.15), inset 0 0 20px rgba(224, 82, 67, 0.03);
+}
+
+.border-glow-amber {
+  box-shadow: 0 0 20px rgba(240, 160, 75, 0.12), inset 0 0 20px rgba(240, 160, 75, 0.03);
+}
