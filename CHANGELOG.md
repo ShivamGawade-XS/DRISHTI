@@ -133,3 +133,4 @@
 - 2026-05-22 15:07: Design India Fraud Heatmap page
 - 2026-05-22 15:08: Add react-simple-maps for geospatial visualization
 - 2026-05-22 15:10: Fix TopoJSON projection scaling for India
+- 2026-05-22 15:12: Update Heatmap to render pulsing red markers
