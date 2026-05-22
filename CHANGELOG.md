@@ -222,3 +222,4 @@
 - 2026-05-22 14:53: Handle missing python-louvain dependency gracefully
 - 2026-05-22 14:55: Create Mule Network Graph Next.js page
 - 2026-05-22 14:57: Add react-force-graph-2d dependency
+- 2026-05-22 14:59: Fix dynamic import for react-force-graph (SSR issue)
