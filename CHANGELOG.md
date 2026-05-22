@@ -160,3 +160,4 @@
 - 2026-05-22 15:52: Setup 15-minute cron for mule ring detection
 - 2026-05-22 15:54: Tweak LightGBM hyperparameters for better recall
 - 2026-05-22 15:56: Reduce false positive rate by adjusting R01 velocity rule
+- 2026-05-22 15:57: Add threshold multiplier for festival days in temporal.py
