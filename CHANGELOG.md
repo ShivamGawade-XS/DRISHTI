@@ -168,3 +168,4 @@
 - 2026-05-22 16:07: Fix text overflow in explainability narrative
 - 2026-05-22 16:09: Enhance dark mode contrast on inactive buttons
 - 2026-05-22 16:10: Add ping animation to WS connected badge
+- 2026-05-22 16:11: Add fallback mock generation if /api/v1/graph fails
