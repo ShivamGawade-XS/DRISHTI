@@ -125,3 +125,4 @@
 - 2026-05-22 14:54: Add graph.py for NetworkX mule detection
 - 2026-05-22 14:55: Integrate Louvain community detection
 - 2026-05-22 14:57: Handle missing python-louvain dependency gracefully
+- 2026-05-22 14:58: Create Mule Network Graph Next.js page
