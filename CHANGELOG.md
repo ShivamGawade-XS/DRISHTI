@@ -175,3 +175,4 @@
 - 2026-05-22 16:17: Fix relative imports in backend engine modules
 - 2026-05-22 16:19: Add data folder creation to db init
 - 2026-05-22 16:21: Clean up dead code in generator script
+- 2026-05-22 16:23: Ensure uvicorn starts with --reload in dev mode
