@@ -173,3 +173,4 @@
 - 2026-05-22 16:15: Update heatmap markers based on risk_level colors
 - 2026-05-22 16:16: Optimize Next.js build chunks
 - 2026-05-22 16:17: Fix relative imports in backend engine modules
+- 2026-05-22 16:19: Add data folder creation to db init
