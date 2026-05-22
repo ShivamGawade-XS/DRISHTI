@@ -16,9 +16,30 @@ export default function LoginPage() {
     setLoading(true);
     // Simulate auth delay
     setTimeout(() => {
-      setLoading(false);
-      router.push('/dashboard');
-    }, 1500);
+      try {
+        // Derive name from email (e.g. "john.doe@bank.com" -> "John Doe")
+        const namePart = email.split('@')[0] || "User";
+        const displayName = namePart
+          .split('.')
+          .map(word => word ? word.charAt(0).toUpperCase() + word.slice(1) : '')
+          .join(' ');
+        
+        const initials = displayName.split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
+
+        localStorage.setItem('drishti_user', JSON.stringify({
+          name: displayName || 'Investigator',
+          initials: initials,
+          role: 'L2 Investigator',
+          email: email
+        }));
+        
+        // Force hard navigation
+        router.push('/dashboard');
+      } catch (err) {
+        console.error("Login logic error:", err);
+        setLoading(false);
+      }
+    }, 1000);
   };
 
   return (
@@ -64,7 +85,7 @@ export default function LoginPage() {
           <h3 className="text-2xl font-bold text-[var(--text-main)] mb-2">Welcome back</h3>
           <p className="text-[var(--accent-light)] text-sm mb-8">Enter your credentials to access the operations dashboard.</p>
           
-          <form onSubmit={handleLogin} className="space-y-5">
+          <div className="space-y-5" onKeyDown={(e) => e.key === 'Enter' && handleLogin(e as any)}>
             <div>
               <label className="block text-xs font-bold text-[var(--accent-light)] tracking-wide mb-2">WORK EMAIL</label>
               <input 
@@ -72,7 +93,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-3 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-3 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="investigator@bank.com"
               />
             </div>
@@ -87,15 +108,16 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-3 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-3 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="••••••••"
               />
             </div>
             
             <button 
-              type="submit" 
+              type="button" 
+              onClick={handleLogin}
               disabled={loading}
-              className={`w-full py-3 rounded-lg font-bold text-white transition-all shadow-lg flex justify-center items-center ${
+              className={`w-full py-3 rounded-sm font-bold text-white transition-all shadow-lg flex justify-center items-center ${
                 loading 
                   ? 'bg-[var(--border-color)] cursor-wait' 
                   : 'bg-gradient-to-r from-[var(--accent-copper)] to-[rgba(184,115,51,0.8)] hover:to-[var(--accent-copper)] hover:shadow-[0_0_20px_rgba(184,115,51,0.3)]'
@@ -108,7 +130,7 @@ export default function LoginPage() {
                 </svg>
               ) : 'Sign In'}
             </button>
-          </form>
+          </div>
           
           <div className="mt-8 text-center text-sm text-[var(--accent-light)]">
             Don't have an account? <Link href="/signup" className="text-[var(--accent-copper)] hover:text-white transition-colors font-bold">Request Access</Link>
@@ -118,3 +140,4 @@ export default function LoginPage() {
     </>
   );
 }
+
