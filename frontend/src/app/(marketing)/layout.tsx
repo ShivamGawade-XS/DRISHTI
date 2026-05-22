@@ -15,8 +15,8 @@ export default function MarketingLayout({
             
             {/* Logo */}
             <div className="flex items-center space-x-3 cursor-pointer">
-              <Image src="/logo.png" alt="DRISHTI Logo" width={36} height={36} className="rounded-lg shadow-sm border border-[var(--accent-copper)]" />
-              <span className="text-2xl font-black tracking-tighter text-[var(--text-main)]">
+              <Image src="/logo.png" alt="DRISHTI Logo" width={56} height={56} className="drop-shadow-md object-contain" />
+              <span className="text-base font-black tracking-tighter text-[var(--text-main)]">
                 DRI<span className="text-[var(--accent-copper)]">SHTI</span>
               </span>
             </div>

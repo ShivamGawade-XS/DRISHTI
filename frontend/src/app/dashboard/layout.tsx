@@ -21,14 +21,14 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <aside className="w-64 border-r border-[var(--border-color)] glass-card m-4 flex flex-col">
-        <div className="p-6 border-b border-[var(--border-color)] flex items-center space-x-3">
-          <Image src="/logo.png" alt="DRISHTI Logo" width={40} height={40} className="rounded-lg shadow-lg border border-[var(--accent-copper)]" />
+        <div className="p-6 border-b border-[var(--border-color)] flex items-center space-x-4">
+          <Image src="/logo.png" alt="DRISHTI Logo" width={56} height={56} className="drop-shadow-md object-contain" />
           <div>
-            <h1 className="text-xl font-black tracking-tighter">
+            <h1 className="text-base font-black tracking-tighter leading-none">
               <span className="glow-copper text-[var(--accent-copper)]">DRI</span>
               <span className="text-[var(--text-main)]">SHTI</span>
             </h1>
-            <p className="text-[10px] text-[var(--accent-light)] font-mono tracking-widest mt-0.5">FRAUD OPS</p>
+            <p className="text-[9px] text-[var(--accent-light)] font-mono tracking-widest mt-1">FRAUD OPS</p>
           </div>
         </div>
         <nav className="flex-1 p-4 space-y-2">
