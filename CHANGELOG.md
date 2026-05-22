@@ -253,3 +253,4 @@
 - 2026-05-22 15:49: Write deployment instructions for Windows
 - 2026-05-22 15:51: Add APScheduler for background batch jobs
 - 2026-05-22 15:53: Setup 15-minute cron for mule ring detection
+- 2026-05-22 15:55: Tweak LightGBM hyperparameters for better recall
