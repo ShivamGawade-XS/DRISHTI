@@ -202,3 +202,4 @@
 - 2026-05-22 14:19: Add Inter and JetBrains Mono fonts
 - 2026-05-22 14:20: Refactor frontend to use standard glass-card classes
 - 2026-05-22 14:22: Implement rules engine for heuristic fraud detection
+- 2026-05-22 14:24: Add temporal context analyzer for night bursts
