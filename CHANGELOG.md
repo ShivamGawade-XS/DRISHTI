@@ -124,3 +124,4 @@
 - 2026-05-22 14:51: Create operator decision POST endpoint
 - 2026-05-22 14:54: Add graph.py for NetworkX mule detection
 - 2026-05-22 14:55: Integrate Louvain community detection
+- 2026-05-22 14:57: Handle missing python-louvain dependency gracefully
