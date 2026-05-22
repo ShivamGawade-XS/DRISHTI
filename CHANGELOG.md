@@ -138,3 +138,4 @@
 - 2026-05-22 15:15: Design payload injection form
 - 2026-05-22 15:17: Add OTP Relay preset to adversarial lab
 - 2026-05-22 15:19: Add Mule Funnel and Night Burst presets
+- 2026-05-22 15:21: Bind slider states to payload generator
