@@ -7,62 +7,108 @@ import { Card } from "@/components/ui/Card";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), { ssr: false });
 
+type MuleRing = {
+  community_id: number;
+  drain_node: string;
+  mule_score: number;
+  nodes_count: number;
+  total_volume: number;
+  fan_in: number;
+  drain_ratio: number;
+  explanation: string;
+};
+
+type GraphData = {
+  nodes: any[];
+  links: any[];
+  mule_rings?: MuleRing[];
+};
+
 export default function MuleGraphPage() {
-  const [graphData, setGraphData] = useState<{ nodes: any[], links: any[], mule_rings?: any[] }>({ nodes: [], links: [] });
-  const [selectedRing, setSelectedRing] = useState<any>(null);
+  const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
+  const [selectedRing, setSelectedRing] = useState<MuleRing | null>(null);
+  const [viewMode, setViewMode] = useState<"topology" | "flow">("topology");
+  const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [dimensions, setDimensions] = useState({ width: 700, height: 500 });
+  const [backendOnline, setBackendOnline] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  const fetchGraph = useCallback(async () => {
+    try {
+      const r = await fetch("http://localhost:8000/api/v1/graph");
+      if (!r.ok) throw new Error();
+      const d = await r.json();
+      if (d.nodes?.length > 0) {
+        setGraphData(d);
+        setBackendOnline(true);
+      }
+    } catch {
+      setBackendOnline(false);
+      // Deterministic fallback
+      const nodes: any[] = [];
+      const links: any[] = [];
+      const mule_rings: MuleRing[] = [];
+      nodes.push({ id: "DRAIN_MASTER", group: 0, val: 80, mule_suspect: true, total_in: 180000, total_out: 0 });
+      const communities = ["OTP_RELAY", "MULE_LAYER_A", "MULE_LAYER_B"];
+      communities.forEach((center, c) => {
+        nodes.push({ id: center, group: c + 1, val: 45, mule_suspect: true, total_in: 60000, total_out: 58000 });
+        links.push({ source: center, target: "DRAIN_MASTER", weight: 58000 + c * 5000 });
+        for (let i = 0; i < 5; i++) {
+          const leaf = `VICTIM_${c}_${i}`;
+          nodes.push({ id: leaf, group: c + 1, val: 10, mule_suspect: false, total_in: 0, total_out: 12000 });
+          links.push({ source: leaf, target: center, weight: 10000 + Math.random() * 5000 });
+        }
+        mule_rings.push({
+          community_id: c + 1, drain_node: center, mule_score: 92 - c * 7,
+          nodes_count: 6, total_volume: 60000 + c * 10000, fan_in: 5,
+          drain_ratio: 0.97 - c * 0.05,
+          explanation: `Community ${c + 1} — ${center} acts as a layer-${c + 1} aggregator. ${5} victim accounts funneled ₹${(60000 + c * 10000).toLocaleString()} in. ${(97 - c * 5)}% was drained upward within 2h, matching a classic Jamtara-style UPI layering funnel. Behavioural velocity score: HIGH.`
+        });
+      });
+      setGraphData({ nodes, links, mule_rings });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/v1/graph")
-      .then(r => r.json())
-      .then(d => {
-        if (d.nodes && d.nodes.length > 0) {
-          setGraphData(d);
-        } else {
-          // Fallback mock data
-          const nodes: any[] = [];
-          const links: any[] = [];
-          const mule_rings: any[] = [];
-          nodes.push({ id: "MULE_DRAIN", group: 0, val: 80, mule_suspect: true });
-          for (let c = 0; c < 3; c++) {
-            const clusterCenter = `CLUSTER_${c}`;
-            nodes.push({ id: clusterCenter, group: c + 1, val: 40, mule_suspect: true });
-            links.push({ source: clusterCenter, target: "MULE_DRAIN", weight: 50000 });
-            for (let i = 0; i < 5; i++) {
-              const leaf = `VICTIM_${c}_${i}`;
-              nodes.push({ id: leaf, group: c + 1, val: 10, mule_suspect: false });
-              links.push({ source: leaf, target: clusterCenter, weight: Math.random() * 5000 });
-            }
-            mule_rings.push({
-              community_id: c + 1,
-              drain_node: clusterCenter,
-              mule_score: 85,
-              nodes_count: 6,
-              total_volume: 25000,
-              fan_in: 5,
-              drain_ratio: 1.0,
-              explanation: `Mule Ring Detected. 1 central drain account (${clusterCenter}) received 5 distinct low-value inflows totaling Rs.25,000, which was fully transferred out (Drain Ratio: 100%) within 2 hours. Pattern matches a classic high-velocity layering funnel.`
-            });
-          }
-          setGraphData({ nodes, links, mule_rings });
-        }
-      })
-      .catch(e => console.log("Graph fetch failed"));
+    fetchGraph();
+    const interval = setInterval(fetchGraph, 15000); // 15s poll as fallback
+    
+    // Live WS updates
+    const connectWs = () => {
+      const ws = new WebSocket("ws://localhost:8000/ws/transactions");
+      ws.onopen = () => setBackendOnline(true);
+      ws.onmessage = () => {
+        // Just let it update on interval to avoid expensive graph recalculations on every single tx
+      };
+      ws.onclose = () => {
+        setBackendOnline(false);
+        setTimeout(connectWs, 5000);
+      };
+      wsRef.current = ws;
+    };
+    connectWs();
 
-    const updateDimensions = () => {
+    const update = () => {
       if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.clientWidth,
-          height: containerRef.current.clientHeight
-        });
+        setDimensions({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight });
       }
     };
-    
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+    update();
+    window.addEventListener("resize", update);
+
+    return () => {
+      window.removeEventListener("resize", update);
+      clearInterval(interval);
+      if (wsRef.current) wsRef.current.close();
+    };
+  }, [fetchGraph]);
+
+  const handleSelectRing = useCallback((ring: MuleRing) => {
+    setSelectedRing(ring === selectedRing ? null : ring);
+  }, [selectedRing]);
 
   return (
     <div className="flex flex-col h-full space-y-4">
@@ -72,6 +118,7 @@ export default function MuleGraphPage() {
           <p className="text-base text-ui-muted">Louvain community detection and betweenness centrality</p>
         </div>
         <div className="flex flex-wrap gap-4 text-xs font-mono font-medium">
+          <div className="flex items-center"><span className={`w-2 h-2 rounded-full ${backendOnline ? 'bg-green-500' : 'bg-red-500'} mr-2`}></span> {backendOnline ? 'Live' : 'Offline'}</div>
           <div className="flex items-center"><span className="w-2 h-2 rounded-full bg-ui-riskRed mr-2"></span> Mule Suspect</div>
           <div className="flex items-center"><span className="w-2 h-2 rounded-full bg-ui-accent mr-2"></span> Community A</div>
           <div className="flex items-center"><span className="w-2 h-2 rounded-full bg-ui-riskGreen mr-2"></span> Community B</div>
