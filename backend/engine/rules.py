@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Tuple
+from datetime import datetime
 
 def evaluate_rules(txn: Dict[str, Any], profile: Dict[str, Any], temporal_context: Dict[str, Any]) -> List[str]:
     """
@@ -8,7 +9,13 @@ def evaluate_rules(txn: Dict[str, Any], profile: Dict[str, Any], temporal_contex
     flags = []
     
     amount = float(txn.get("amount", 0.0))
-    hour = int(txn.get("timestamp", "2025-01-01T12:00:00")[11:13])
+    timestamp = txn.get("timestamp", "")
+    try:
+        dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        hour = dt.hour
+    except (ValueError, TypeError, AttributeError):
+        hour = 12
+
     
     # Profile metrics
     txn_count_1h = int(profile.get("txn_count_1h", 0))

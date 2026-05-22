@@ -8,19 +8,28 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        xs: ['0.75rem', { lineHeight: '1.65' }],
+        sm: ['1rem', { lineHeight: '1.65' }],
+        base: ['1.333rem', { lineHeight: '1.65' }],
+        lg: ['1.777rem', { lineHeight: '1.65', letterSpacing: '-0.02em' }],
+        xl: ['2.369rem', { lineHeight: '1.2', letterSpacing: '-0.03em' }],
+        '2xl': ['3.157rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
+        '3xl': ['4.209rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
+        '4xl': ['5.611rem', { lineHeight: '1.1', letterSpacing: '-0.04em' }],
+      },
       colors: {
-        drishti: {
-          bg: "#0a0f1e",
-          card: "#111827",
-          surface: "#1a2235",
-          border: "#1e293b",
-          cyan: "#00d4ff",
-          magenta: "#ff006e",
-          amber: "#ffbe0b",
-          green: "#00f5a0",
-          red: "#ff4757",
-          text: "#e2e8f0",
-          muted: "#64748b",
+        ui: {
+          bg: "var(--bg-primary)",
+          surface: "var(--bg-surface)",
+          card: "var(--bg-card)",
+          border: "var(--border-color)",
+          text: "var(--text-main)",
+          muted: "var(--accent-light)",
+          accent: "var(--accent-copper)",
+          riskRed: "var(--risk-red)",
+          riskAmber: "var(--risk-amber)",
+          riskGreen: "var(--risk-green)",
         },
       },
       fontFamily: {
@@ -32,7 +41,6 @@ const config: Config = {
         "slide-up": "slideUp 0.5s ease-out",
         "slide-in-left": "slideInLeft 0.4s ease-out",
         "pulse-slow": "pulse 3s ease-in-out infinite",
-        "pulse-fast": "pulse 1.5s ease-in-out infinite",
         glow: "glow 2s ease-in-out infinite",
         "spin-slow": "spin 3s linear infinite",
         "counter-up": "counterUp 1s ease-out",
@@ -54,8 +62,8 @@ const config: Config = {
           "100%": { opacity: "1", transform: "translateX(0)" },
         },
         glow: {
-          "0%, 100%": { boxShadow: "0 0 5px rgba(0, 212, 255, 0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(0, 212, 255, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 5px rgba(184, 115, 51, 0.2)" },
+          "50%": { boxShadow: "0 0 20px rgba(184, 115, 51, 0.5)" },
         },
         counterUp: {
           "0%": { transform: "translateY(100%)", opacity: "0" },
@@ -66,8 +74,8 @@ const config: Config = {
           "100%": { backgroundPosition: "200% 0" },
         },
         borderGlow: {
-          "0%, 100%": { borderColor: "rgba(0, 212, 255, 0.3)" },
-          "50%": { borderColor: "rgba(0, 212, 255, 0.8)" },
+          "0%, 100%": { borderColor: "rgba(184, 115, 51, 0.3)" },
+          "50%": { borderColor: "rgba(184, 115, 51, 0.8)" },
         },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
@@ -77,10 +85,12 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-mesh":
-          "radial-gradient(at 40% 20%, rgba(0, 212, 255, 0.05) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(255, 0, 110, 0.05) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(0, 245, 160, 0.05) 0px, transparent 50%)",
+          "radial-gradient(at 40% 20%, rgba(184, 115, 51, 0.08) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(107, 90, 77, 0.15) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(231, 212, 194, 0.05) 0px, transparent 50%)",
       },
       backdropBlur: {
         xs: "2px",
+        md: "12px",
+        lg: "24px",
       },
     },
   },

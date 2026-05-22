@@ -119,7 +119,7 @@ export const mockAuditLog: AuditLogEntry[] = [
   { id: "A6", timestamp: "2026-05-22T07:30:00Z", operator: "System", action: "ALERT_SENT", detail: "Customer alert sent for TXN-6D1C — awaiting response" },
 ];
 
-const communityColors = ["#00d4ff", "#ff006e", "#ffbe0b", "#00f5a0", "#a855f7", "#f97316"];
+const communityColors = ["#B87333", "#A34333", "#B87333", "#7D8C6C", "#a855f7", "#f97316"];
 
 export const mockMuleGraph: MuleGraphData = {
   nodes: [
