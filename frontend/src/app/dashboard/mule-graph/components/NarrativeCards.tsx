@@ -34,7 +34,7 @@ export function NarrativeCards({ rings, selectedRing, setSelectedRing }: Narrati
         {rings.map((ring: any, idx: number) => (
           <div 
             key={idx} 
-            className={`p-5 rounded-xl border transition-all duration-300 ease-out cursor-pointer ${
+            className={`p-5 rounded-sm border transition-all duration-300 ease-out cursor-pointer ${
               selectedRing?.community_id === ring.community_id 
                 ? 'bg-ui-bg border-ui-riskRed shadow-[0_0_15px_rgba(224,82,67,0.1)]' 
                 : 'bg-ui-bg/50 border-ui-border hover:border-ui-accent hover:-translate-y-0.5 hover:shadow-sm'
@@ -63,3 +63,4 @@ export function NarrativeCards({ rings, selectedRing, setSelectedRing }: Narrati
     </Card>
   );
 }
+
