@@ -203,3 +203,4 @@
 - 2026-05-22 14:20: Refactor frontend to use standard glass-card classes
 - 2026-05-22 14:22: Implement rules engine for heuristic fraud detection
 - 2026-05-22 14:24: Add temporal context analyzer for night bursts
+- 2026-05-22 14:25: Add synthetic dataset generator script
