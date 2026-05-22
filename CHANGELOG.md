@@ -171,3 +171,4 @@
 - 2026-05-22 16:11: Add fallback mock generation if /api/v1/graph fails
 - 2026-05-22 16:12: Render statistical HUD in Mule Network page
 - 2026-05-22 16:15: Update heatmap markers based on risk_level colors
+- 2026-05-22 16:16: Optimize Next.js build chunks
