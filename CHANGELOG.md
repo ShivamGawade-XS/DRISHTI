@@ -273,3 +273,4 @@
 - 2026-05-22 16:22: Ensure uvicorn starts with --reload in dev mode
 - 2026-05-22 16:23: Add transaction latency measurement to backend
 - 2026-05-22 16:25: Display response latency in UI
+- 2026-05-22 16:27: Tweak transaction feed auto-scroll behavior
