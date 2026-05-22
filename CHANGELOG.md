@@ -126,3 +126,4 @@
 - 2026-05-22 14:55: Integrate Louvain community detection
 - 2026-05-22 14:57: Handle missing python-louvain dependency gracefully
 - 2026-05-22 14:58: Create Mule Network Graph Next.js page
+- 2026-05-22 15:00: Add react-force-graph-2d dependency
