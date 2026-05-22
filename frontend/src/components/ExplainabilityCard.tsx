@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 
 export default function ExplainabilityCard({ txn }: { txn: any }) {
   const [lang, setLang] = useState<"en" | "hi">("en");
@@ -60,27 +61,63 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
         setDecision(choice);
       });
   };
-  
+  const handleGenerateSAR = async () => {
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/generate-sar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(txn)
+      });
+      const data = await res.json();
+      
+      // Create a blob and download it
+      const blob = new Blob([data.report], { type: "text/plain" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `SAR_${txn.transaction_id}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (e) {
+      console.error("Failed to generate SAR", e);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="bg-[var(--bg-primary)] rounded-xl p-4 mt-4 border border-[var(--border-color)] space-y-6">
+    <div className="bg-[var(--bg-primary)] rounded-sm p-4 mt-4 border border-[var(--border-color)] space-y-6">
       <div className="flex justify-between items-center pb-2 border-b border-[var(--border-color)]/50">
         <h4 className="text-sm font-semibold text-[var(--text-main)] flex items-center">
           <svg className="w-4.5 h-4.5 mr-2 text-[var(--accent-copper)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           AI Explainability Card
         </h4>
-        <div className="flex space-x-2 bg-[var(--bg-card)] rounded-lg p-1">
-          <button 
-            onClick={() => setLang("en")}
-            className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${lang === "en" ? "bg-[var(--border-color)] text-[var(--text-main)]" : "text-[var(--accent-light)] hover:text-[var(--text-main)]"}`}
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleGenerateSAR}
+            disabled={isSubmitting}
+            className="flex items-center text-xs font-mono font-bold tracking-widest text-[var(--text-main)] bg-[var(--bg-card)] border border-[var(--border-color)] px-3 py-1.5 rounded-sm hover:bg-[var(--accent-copper)] hover:text-white transition-colors"
           >
-            EN
+            <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            GENERATE SAR
           </button>
-          <button 
-            onClick={() => setLang("hi")}
-            className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${lang === "hi" ? "bg-[var(--border-color)] text-[var(--text-main)]" : "text-[var(--accent-light)] hover:text-[var(--text-main)]"}`}
-          >
-            HI
-          </button>
+          <div className="flex space-x-1 bg-[var(--bg-card)] rounded-sm p-1">
+            <button 
+              onClick={() => setLang("en")}
+              className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${lang === "en" ? "bg-[var(--border-color)] text-[var(--text-main)]" : "text-[var(--accent-light)] hover:text-[var(--text-main)]"}`}
+            >
+              EN
+            </button>
+            <button 
+              onClick={() => setLang("hi")}
+              className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${lang === "hi" ? "bg-[var(--border-color)] text-[var(--text-main)]" : "text-[var(--accent-light)] hover:text-[var(--text-main)]"}`}
+            >
+              HI
+            </button>
+          </div>
         </div>
       </div>
 
@@ -88,16 +125,27 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
         {/* SHAP Values Chart */}
         <div className="space-y-4">
           <div>
-            <div className="text-xs text-[var(--accent-light)] mb-2 font-mono tracking-wider">TOP RISK FACTORS (SHAP)</div>
-            <div className="space-y-3">
-              {txn.top_shap_features?.map((feat: any, idx: number) => (
+            <div className="text-xs text-[var(--accent-light)] mb-2 font-mono tracking-wider">ANOMALY FOOTPRINT (RADAR)</div>
+            <div className="h-[200px] w-full -ml-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={txn.top_shap_features?.map((f: any) => ({ subject: f.feature.replace(/_/g, ' '), A: Math.min(f.contribution * 3, 100), fullMark: 100 })) || []}>
+                  <PolarGrid stroke="var(--border-color)" />
+                  <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--accent-light)', fontSize: 9, fontFamily: 'monospace' }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  <Radar name="Transaction" dataKey="A" stroke="var(--risk-red)" fill="var(--risk-red)" fillOpacity={0.3} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Keeping the top 2 linear bars for specific values */}
+            <div className="space-y-3 mt-2 px-2">
+              {txn.top_shap_features?.slice(0, 2).map((feat: any, idx: number) => (
                 <div key={idx}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-[var(--accent-light)] font-mono truncate mr-2">{feat.feature}</span>
+                  <div className="flex justify-between text-[10px] mb-1">
+                    <span className="text-[var(--accent-light)] font-mono truncate mr-2">{feat.feature.toUpperCase()}</span>
                     <span className="text-[var(--risk-red)] font-mono font-bold">+{feat.contribution.toFixed(1)}</span>
                   </div>
-                  <div className="w-full bg-[var(--border-color)] rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-gradient-to-r from-[var(--risk-amber)] to-[var(--risk-red)] h-1.5 rounded-full" style={{ width: `${Math.min(feat.contribution * 2, 100)}%` }}></div>
+                  <div className="w-full bg-[var(--border-color)] rounded-full h-1 overflow-hidden">
+                    <div className="bg-gradient-to-r from-[var(--risk-amber)] to-[var(--risk-red)] h-1 rounded-full" style={{ width: `${Math.min(feat.contribution * 2, 100)}%` }}></div>
                   </div>
                 </div>
               ))}
@@ -105,7 +153,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
           </div>
 
           {/* User Onboarding Cohort Details */}
-          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-3">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm p-3">
             <span className="text-[10px] font-mono text-[var(--accent-light)] block mb-1">ONBOARDING COHORT</span>
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[var(--accent-copper)] font-mono capitalize">
@@ -120,7 +168,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
         <div className="flex flex-col space-y-4">
           <div>
             <div className="text-xs text-[var(--accent-light)] mb-2 font-mono tracking-wider">NARRATIVE</div>
-            <div className="bg-[var(--bg-card)] rounded-xl p-3.5 border border-[var(--border-color)] min-h-[90px] relative">
+            <div className="bg-[var(--bg-card)] rounded-sm p-3.5 border border-[var(--border-color)] min-h-[90px] relative">
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center h-20 text-[var(--accent-light)] space-y-2">
                   <div className="w-5 h-5 border-2 border-t-[var(--accent-copper)] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
@@ -145,7 +193,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
           {/* Action buttons with feedback loops */}
           <div className="flex space-x-3 pt-1">
             {decision ? (
-              <div className={`w-full py-2.5 rounded-lg text-xs font-bold font-mono tracking-widest text-center border ${
+              <div className={`w-full py-2.5 rounded-sm text-xs font-bold font-mono tracking-widest text-center border ${
                 decision === 'block' 
                   ? 'bg-[var(--risk-red)]/20 text-[var(--risk-red)] border-[var(--risk-red)]/40' 
                   : 'bg-[var(--risk-green)]/15 text-[var(--risk-green)] border-[var(--risk-green)]/30'
@@ -157,14 +205,14 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
                 <button 
                   disabled={isSubmitting}
                   onClick={() => handleDecision("block")}
-                  className="flex-1 py-2.5 bg-[var(--risk-red)]/20 text-[var(--risk-red)] hover:bg-[var(--risk-red)]/30 rounded-lg text-xs font-bold font-mono tracking-wider transition-all border border-[var(--risk-red)]/50 hover:shadow-[0_0_15px_rgba(255,0,110,0.2)]"
+                  className="flex-1 py-2.5 bg-[var(--risk-red)]/20 text-[var(--risk-red)] hover:bg-[var(--risk-red)]/30 rounded-sm text-xs font-bold font-mono tracking-wider transition-all border border-[var(--risk-red)]/50"
                 >
                   {isSubmitting ? "WAIT..." : "BLOCK ACCOUNT"}
                 </button>
                 <button 
                   disabled={isSubmitting}
                   onClick={() => handleDecision("allow")}
-                  className="flex-1 py-2.5 bg-[var(--border-color)] text-[var(--text-main)] hover:bg-[var(--border-color)] rounded-lg text-xs font-bold font-mono tracking-wider transition-all border border-[var(--border-color)]"
+                  className="flex-1 py-2.5 bg-[var(--border-color)] text-[var(--text-main)] hover:bg-[var(--border-color)] rounded-sm text-xs font-bold font-mono tracking-wider transition-all border border-[var(--border-color)]"
                 >
                   {isSubmitting ? "WAIT..." : "ALLOW"}
                 </button>
@@ -194,12 +242,12 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
                 const dateStr = date.toLocaleDateString([], { month: "short", day: "numeric" });
                 const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
                 return (
-                  <div key={hist.id || i} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg p-2.5 flex flex-col space-y-1.5 w-[150px] shadow-sm">
+                  <div key={hist.id || i} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm p-2.5 flex flex-col space-y-1.5 w-[150px]">
                     <div className="flex justify-between items-center">
                       <span className="text-[10px] text-[var(--accent-light)] font-mono">{dateStr}, {timeStr}</span>
                       <span className={`text-[9px] font-mono font-bold px-1.5 rounded-full ${
                         hist.risk_score >= 80 
-                          ? 'bg-[var(--risk-red)]/10 text-[var(--risk-red)]' 
+                          ? 'bg-ui-bg border-ui-riskRed' 
                           : hist.risk_score >= 50 
                           ? 'bg-[var(--risk-amber)]/10 text-[var(--risk-amber)]' 
                           : 'bg-[var(--risk-green)]/10 text-[var(--risk-green)]'
@@ -224,3 +272,4 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
     </div>
   );
 }
+
