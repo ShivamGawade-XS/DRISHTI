@@ -15,7 +15,7 @@ export function SimulationResult({ result }: SimulationResultProps) {
       <CardContent>
         {result ? (
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-5 bg-ui-bg rounded-lg border border-ui-border shadow-sm">
+            <div className="flex items-center justify-between p-5 bg-ui-bg rounded-sm border border-ui-border shadow-sm">
               <span className="text-ui-muted font-bold tracking-wider text-sm">RISK SCORE</span>
               <span className={`text-4xl font-bold tracking-tight ${result.risk_level === 'red' ? 'text-ui-riskRed' : result.risk_level === 'yellow' ? 'text-ui-riskAmber' : 'text-ui-riskGreen'}`}>
                 {result.risk_score}
@@ -40,7 +40,7 @@ export function SimulationResult({ result }: SimulationResultProps) {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-64 text-ui-muted space-y-4 border-2 border-dashed border-ui-border/50 rounded-xl bg-ui-bg/30">
+          <div className="flex flex-col items-center justify-center h-64 text-ui-muted space-y-4 border-2 border-dashed border-ui-border/50 rounded-sm bg-ui-bg/30">
             <svg className="w-8 h-8 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -51,3 +51,4 @@ export function SimulationResult({ result }: SimulationResultProps) {
     </Card>
   );
 }
+
