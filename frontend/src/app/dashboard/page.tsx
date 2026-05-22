@@ -375,7 +375,7 @@ export default function Dashboard() {
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-[var(--text-main)] font-semibold">Net savings vs no model</span>
-                <span className="font-mono font-bold text-[var(--risk-green)]">₹{cost.savings_vs_no_model.toLocaleString()}</span>
+                <span className="font-mono font-bold text-[var(--risk-green)]">₹{(cost.savings_vs_no_model || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
