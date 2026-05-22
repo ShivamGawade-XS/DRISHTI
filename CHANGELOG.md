@@ -128,3 +128,4 @@
 - 2026-05-22 14:58: Create Mule Network Graph Next.js page
 - 2026-05-22 15:00: Add react-force-graph-2d dependency
 - 2026-05-22 15:02: Fix dynamic import for react-force-graph (SSR issue)
+- 2026-05-22 15:04: Map network node colors to Louvain clusters
