@@ -121,3 +121,4 @@
 - 2026-05-22 14:46: Fix layout spacing in dashboard header
 - 2026-05-22 14:49: Add Model Health widget UI
 - 2026-05-22 14:50: Implement Risk Threshold slider inputs
+- 2026-05-22 14:51: Create operator decision POST endpoint
