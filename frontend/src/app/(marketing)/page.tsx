@@ -11,8 +11,9 @@ export default function MarketingPage() {
       <section className="w-full relative py-24 md:py-36 overflow-hidden border-b border-ui-border bg-ui-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-start justify-center min-h-[70vh]">
           <div className="max-w-3xl space-y-8 animate-slide-up">
-            <div className="inline-flex items-center space-x-2 bg-ui-accent/10 border border-ui-accent/30 rounded-full px-4 py-1.5 text-xs font-mono font-bold text-ui-accent uppercase tracking-widest">
-              <span>● Live In Production</span>
+            <div className="inline-flex items-center border border-ui-border bg-[#0a0a0a] px-3 py-1 text-[10px] font-mono font-bold text-ui-muted uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 bg-ui-riskGreen mr-2 animate-pulse" />
+              SYSTEM STATUS: LIVE
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-ui-text">
               Intercept UPI fraud in under 50ms using behavioral graph biometrics.

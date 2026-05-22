@@ -136,6 +136,16 @@ export default function DashboardLayout({
           ))}
         </nav>
         
+        {/* Explicit Back to Website Link */}
+        <div className="p-4 border-t border-[var(--border-color)] shrink-0 bg-[var(--bg-surface)]">
+          <Link href="/" className="flex items-center gap-2 text-xs font-mono text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            BACK TO WEBSITE
+          </Link>
+        </div>
+
         {/* User Footer */}
         <div className="p-4 border-t border-[var(--border-color)] shrink-0 bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] transition-colors cursor-pointer group">
           <div className="flex items-center justify-between">
