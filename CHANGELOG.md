@@ -211,3 +211,4 @@
 - 2026-05-22 14:33: Connect Next.js feed to WebSocket stream
 - 2026-05-22 14:36: Debug WebSocket disconnect issues
 - 2026-05-22 14:38: Fix CORS policy for frontend-backend communication
+- 2026-05-22 14:40: Design AI Explainability Card component
