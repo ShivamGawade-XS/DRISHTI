@@ -272,3 +272,4 @@
 - 2026-05-22 16:21: Clean up dead code in generator script
 - 2026-05-22 16:22: Ensure uvicorn starts with --reload in dev mode
 - 2026-05-22 16:23: Add transaction latency measurement to backend
+- 2026-05-22 16:25: Display response latency in UI
