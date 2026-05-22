@@ -244,3 +244,4 @@
 - 2026-05-22 15:33: Apply animations to layout main wrapper
 - 2026-05-22 15:35: Update TransactionFeed with mock SHAP values for offline testing
 - 2026-05-22 15:37: Fix database insert schema to include lat, lon, device_id
+- 2026-05-22 15:39: Randomize lat/lon across Indian cities in simulator
