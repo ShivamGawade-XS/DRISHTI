@@ -27,7 +27,7 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 bg-[var(--bg-card)]/50 p-12 flex-col justify-between border-r border-[var(--border-color)]">
         <div>
           <div className="flex items-center space-x-4 mb-12">
-            <Image src="/logo.png" alt="DRISHTI Logo" width={80} height={80} className="drop-shadow-lg object-contain" />
+            <Image src="/logo.png" alt="DRISHTI Logo" width={48} height={48} className="object-contain" priority />
             <h1 className="text-lg font-black tracking-tighter leading-none">
               <span className="glow-copper text-[var(--accent-copper)]">DRI</span>
               <span className="text-[var(--text-main)]">SHTI</span>

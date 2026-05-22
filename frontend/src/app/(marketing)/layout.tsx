@@ -1,11 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function MarketingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
+  // Hash links should point to /#section when not on homepage, or #section when on homepage
+  const sectionHref = (hash: string) => (isHomePage ? hash : `/${hash}`);
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col font-sans">
       {/* Horizontal Navbar */}
@@ -14,19 +23,26 @@ export default function MarketingLayout({
           <div className="flex justify-between items-center h-20">
             
             {/* Logo */}
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <Image src="/logo.png" alt="DRISHTI Logo" width={56} height={56} className="drop-shadow-md object-contain" />
+            <Link href="/" className="flex items-center space-x-3 group">
+              <Image 
+                src="/logo.png" 
+                alt="DRISHTI Logo" 
+                width={44} 
+                height={44} 
+                className="object-contain transition-transform group-hover:scale-105" 
+                priority
+              />
               <span className="text-base font-black tracking-tighter text-[var(--text-main)]">
                 DRI<span className="text-[var(--accent-copper)]">SHTI</span>
               </span>
-            </div>
+            </Link>
             
             {/* Nav Links */}
             <nav className="hidden md:flex space-x-8">
-              <Link href="#features" className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Features</Link>
-              <Link href="#solutions" className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Solutions</Link>
-              <Link href="#pricing" className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Pricing</Link>
-              <Link href="#resources" className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Resources</Link>
+              <Link href={sectionHref("#features")} className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Features</Link>
+              <Link href={sectionHref("#solutions")} className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Solutions</Link>
+              <Link href={sectionHref("#pricing")} className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Pricing</Link>
+              <Link href={sectionHref("#resources")} className="text-sm font-medium text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors">Resources</Link>
             </nav>
             
             {/* CTA Buttons */}
@@ -56,11 +72,18 @@ export default function MarketingLayout({
             
             {/* Brand Column */}
             <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-3 group w-fit">
+                <Image 
+                  src="/logo.png" 
+                  alt="DRISHTI Logo" 
+                  width={32} 
+                  height={32} 
+                  className="object-contain transition-transform group-hover:scale-105" 
+                />
                 <span className="text-lg font-black tracking-tighter text-[var(--text-main)]">
                   DRI<span className="text-[var(--accent-copper)]">SHTI</span>
                 </span>
-              </div>
+              </Link>
               <p className="text-xs text-[var(--accent-light)] max-w-sm leading-relaxed">
                 Real-time UPI payment fraud prevention and behavioral graph analytics. Engineered to intercept malicious transfers in under 50ms.
               </p>
@@ -83,7 +106,7 @@ export default function MarketingLayout({
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest font-mono">Product</h4>
               <ul className="space-y-2 text-xs text-[var(--accent-light)]">
-                <li><Link href="#features" className="hover:text-[var(--text-main)] transition-colors">Core Scorer</Link></li>
+                <li><Link href="/#features" className="hover:text-[var(--text-main)] transition-colors">Core Scorer</Link></li>
                 <li><Link href="/dashboard/mule-graph" className="hover:text-[var(--text-main)] transition-colors">Mule Network Graph</Link></li>
                 <li><Link href="/dashboard/adversarial" className="hover:text-[var(--text-main)] transition-colors">Adversarial Simulator</Link></li>
                 <li><Link href="/dashboard" className="hover:text-[var(--text-main)] transition-colors">Operations Dashboard</Link></li>
@@ -94,10 +117,10 @@ export default function MarketingLayout({
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest font-mono">Solutions</h4>
               <ul className="space-y-2 text-xs text-[var(--accent-light)]">
-                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">UPI Apps & FinTechs</Link></li>
-                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">Payment Gateways</Link></li>
-                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">Retail Banking Core</Link></li>
-                <li><Link href="#pricing" className="hover:text-[var(--text-main)] transition-colors">Pricing Plans</Link></li>
+                <li><Link href="/#solutions" className="hover:text-[var(--text-main)] transition-colors">UPI Apps & FinTechs</Link></li>
+                <li><Link href="/#solutions" className="hover:text-[var(--text-main)] transition-colors">Payment Gateways</Link></li>
+                <li><Link href="/#solutions" className="hover:text-[var(--text-main)] transition-colors">Retail Banking Core</Link></li>
+                <li><Link href="/#pricing" className="hover:text-[var(--text-main)] transition-colors">Pricing Plans</Link></li>
               </ul>
             </div>
 
