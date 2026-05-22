@@ -245,3 +245,4 @@
 - 2026-05-22 15:35: Update TransactionFeed with mock SHAP values for offline testing
 - 2026-05-22 15:37: Fix database insert schema to include lat, lon, device_id
 - 2026-05-22 15:39: Randomize lat/lon across Indian cities in simulator
+- 2026-05-22 15:40: Wire overview metrics to live SQLite queries
