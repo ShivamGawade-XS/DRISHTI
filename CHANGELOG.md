@@ -131,3 +131,4 @@
 - 2026-05-22 15:04: Map network node colors to Louvain clusters
 - 2026-05-22 15:05: Calculate betweenness centrality for mule drains
 - 2026-05-22 15:07: Design India Fraud Heatmap page
+- 2026-05-22 15:08: Add react-simple-maps for geospatial visualization
