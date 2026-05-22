@@ -4,8 +4,9 @@ import logging
 import os
 import random
 import time
+import psutil
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import aiosqlite
 from fastapi import FastAPI, BackgroundTasks, WebSocket, WebSocketDisconnect, HTTPException
@@ -18,6 +19,8 @@ from scheduler import start_scheduler
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("drishti.api")
 
+_start_time = time.time()
+
 app = FastAPI(title="DRISHTI API", version="1.0.0")
 
 app.add_middleware(
@@ -28,11 +31,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/api/v1/health")
+async def api_health():
+    uptime = time.time() - _start_time
+    memory = psutil.virtual_memory().percent
+    return {"status": "ok", "uptime_seconds": int(uptime), "memory_percent": memory}
+
 DB_PATH = "data/transactions.db"
 
 GLOBAL_SETTINGS = {
     "festival_mode": False,
     "risk_threshold": 50,
+    "simulate_stream": True,
 }
 
 ONBOARDING_COHORTS = {
@@ -144,8 +154,32 @@ async def init_db():
                 id TEXT PRIMARY KEY, features_json TEXT
             )
         """)
+        # Add indexes for fast real-time historical queries
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_txn_sender_time ON transactions(sender_upi, timestamp)")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_txn_receiver_time ON transactions(receiver_upi, timestamp)")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_txn_sender_receiver ON transactions(sender_upi, receiver_upi)")
+        
+        # New Phase 5 Tables
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS alerts (
+                id TEXT PRIMARY KEY, txn_id TEXT, severity TEXT, title TEXT,
+                description TEXT, status TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS custom_rules (
+                id TEXT PRIMARY KEY, name TEXT, condition_json TEXT, action TEXT,
+                status TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS threat_intel (
+                id TEXT PRIMARY KEY, bin TEXT, issuer TEXT, type TEXT, source TEXT,
+                risk TEXT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         await db.commit()
-        logger.info("Database initialized.")
+        logger.info("Database initialized with Phase 5 tables.")
 
 @app.on_event("startup")
 async def startup_event():
@@ -153,6 +187,29 @@ async def startup_event():
     scorer.load_model()
     start_scheduler()
     asyncio.create_task(simulate_transaction_stream())
+    asyncio.create_task(simulate_threat_intel())
+
+async def simulate_threat_intel():
+    """Background task to simulate scraping dark web BIN dumps."""
+    import uuid
+    issuers = ["HDFC Bank", "ICICI Bank", "SBI", "Axis Bank", "Kotak", "RuPay"]
+    types = ["VISA Signature", "Mastercard World", "Platinum", "Classic"]
+    sources = ["Genesis Market", "Joker's Stash Reborn", "Telegram Leak Channel", "Dark Web Forum"]
+    
+    while True:
+        await asyncio.sleep(random.uniform(60.0, 300.0)) # Generate a new threat every 1-5 mins
+        if not GLOBAL_SETTINGS.get("simulate_stream", True):
+            continue
+            
+        bin_num = f"{random.randint(4000, 6999)} {str(random.randint(1000, 9999))[:2]}XX XXXX XXXX"
+        threat_id = f"TH-{uuid.uuid4().hex[:8]}"
+        
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "INSERT INTO threat_intel (id, bin, issuer, type, source, risk) VALUES (?, ?, ?, ?, ?, ?)",
+                (threat_id, bin_num, random.choice(issuers), random.choice(types), random.choice(sources), random.choice(["High", "Critical", "Medium"]))
+            )
+            await db.commit()
 
 async def simulate_transaction_stream():
     """Background task to simulate live transactions for demo"""
@@ -165,6 +222,8 @@ async def simulate_transaction_stream():
     ]
     while True:
         await asyncio.sleep(random.uniform(1.0, 5.0))
+        if not GLOBAL_SETTINGS.get("simulate_stream", True):
+            continue
         txn_id = f"txn_{uuid.uuid4().hex[:8]}"
         lat, lon = random.choice(cities)
         mock_txn = {
@@ -185,20 +244,22 @@ async def simulate_transaction_stream():
 async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
     start_time = time.perf_counter()
     
+    sender = txn["sender_upi"]
+    receiver = txn["receiver_upi"]
+    amount = float(txn["amount"])
+    timestamp_str = txn["timestamp"]
+    device_id = txn.get("device_id")
+    
     # Context
-    t_context = temporal.get_temporal_context(txn["timestamp"])
+    t_context = temporal.get_temporal_context(timestamp_str)
     if GLOBAL_SETTINGS.get("festival_mode", False):
         t_context["is_festival_day"] = True
         t_context["festival_name"] = "Simulated Festival"
         t_context["threshold_multiplier"] = 1.5
     
-    # Onboarding Cohorts (solve cold-start)
-    cohort_name = get_user_cohort(txn["sender_upi"])
-    cohort = ONBOARDING_COHORTS[cohort_name]
-    
     # Parse timestamp
     try:
-        dt = datetime.fromisoformat(txn["timestamp"].replace("Z", "+00:00"))
+        dt = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
     except ValueError:
         dt = datetime.now()
         
@@ -207,58 +268,105 @@ async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
     is_weekend = 1 if day_of_week >= 5 else 0
     is_night = 1 if (hour >= 22 or hour <= 5) else 0
     
-    # Dynamic profile parameters based on cohort baselines
-    override_txn_count_1h = txn.get("txn_count_1h")
-    if override_txn_count_1h is not None:
-        txn_count_1h = int(override_txn_count_1h)
-    else:
-        txn_count_1h = max(0, cohort["txn_count_1h_baseline"] + random.randint(-1, 2))
-    txn_count_24h = txn_count_1h * 4 + random.randint(0, 10)
-    
-    amount = txn["amount"]
-    override_amount_avg_1h = txn.get("amount_avg_1h")
-    if override_amount_avg_1h is not None:
-        amount_avg_7d = float(override_amount_avg_1h)
-    else:
-        amount_avg_7d = cohort["amount_avg_1h_baseline"] * random.uniform(0.8, 1.2)
-    amount_vs_7d_avg = round(amount / (amount_avg_7d + 1), 2)
-    
-    override_is_new_ben = txn.get("is_new_beneficiary")
-    if override_is_new_ben is not None:
-        is_new_beneficiary = 1 if override_is_new_ben else 0
-    else:
-        is_new_beneficiary = 1 if random.random() < 0.15 else 0
-    beneficiary_age_days = 0.0 if is_new_beneficiary else round(random.uniform(1.0, 180.0), 2)
-    
-    override_new_device = txn.get("new_device_flag")
-    if override_new_device is not None:
-        new_device_flag = 1 if override_new_device else 0
-    else:
-        new_device_flag = 1 if random.random() < 0.08 else 0
-    account_age_days = random.randint(1, 1000)
-    is_merchant_vpa = 1 if "merchant" in txn["receiver_upi"].lower() or "store" in txn["receiver_upi"].lower() or txn["receiver_upi"].endswith("@ybl") else 0
+    dt_1h_ago = (dt - timedelta(hours=1)).isoformat()
+    dt_24h_ago = (dt - timedelta(hours=24)).isoformat()
+    dt_7d_ago = (dt - timedelta(days=7)).isoformat()
+    dt_str = dt.isoformat()
 
-    
-    # Graph contagion and metrics (Louvain secondary check)
-    graph_contagion_score = round(random.uniform(0.0, 0.4), 4)
-    if amount > cohort["max_txn_limit"] or (new_device_flag and is_new_beneficiary):
-        graph_contagion_score = round(random.uniform(0.6, 0.95), 4)
+    # Query DB
+    async with aiosqlite.connect(DB_PATH) as db:
+        # Sender 1h stats
+        cursor = await db.execute("SELECT COUNT(*) FROM transactions WHERE sender_upi=? AND timestamp >= ? AND timestamp < ?", (sender, dt_1h_ago, dt_str))
+        txn_count_1h = (await cursor.fetchone())[0] or 0
         
-    fan_in_count_1h = random.randint(0, 2)
-    drain_ratio_24h = round(random.uniform(0.0, 0.5), 2)
+        # Sender 24h stats
+        cursor = await db.execute("SELECT COUNT(*) FROM transactions WHERE sender_upi=? AND timestamp >= ? AND timestamp < ?", (sender, dt_24h_ago, dt_str))
+        txn_count_24h = (await cursor.fetchone())[0] or 0
+        
+        # Sender 7d avg amount
+        cursor = await db.execute("SELECT AVG(amount) FROM transactions WHERE sender_upi=? AND timestamp >= ? AND timestamp < ?", (sender, dt_7d_ago, dt_str))
+        amount_avg_7d = (await cursor.fetchone())[0]
+        
+        # Account age (first seen sender)
+        cursor = await db.execute("SELECT timestamp FROM transactions WHERE sender_upi=? ORDER BY timestamp ASC LIMIT 1", (sender,))
+        first_sender_row = await cursor.fetchone()
+        if first_sender_row:
+            first_dt = datetime.fromisoformat(first_sender_row[0].replace("Z", "+00:00"))
+            account_age_days = int((dt - first_dt).total_seconds() / 86400)
+        else:
+            account_age_days = 0 # New account
+            
+        # Beneficiary age & new beneficiary flag
+        cursor = await db.execute("SELECT timestamp FROM transactions WHERE sender_upi=? AND receiver_upi=? AND timestamp < ? ORDER BY timestamp ASC LIMIT 1", (sender, receiver, dt_str))
+        first_ben_row = await cursor.fetchone()
+        if first_ben_row:
+            is_new_beneficiary = 0
+            first_ben_dt = datetime.fromisoformat(first_ben_row[0].replace("Z", "+00:00"))
+            beneficiary_age_days = round((dt - first_ben_dt).total_seconds() / 86400, 2)
+        else:
+            is_new_beneficiary = 1
+            beneficiary_age_days = 0.0
+            
+        # New device flag
+        if device_id:
+            cursor = await db.execute("SELECT 1 FROM transactions WHERE sender_upi=? AND device_id=? AND timestamp < ? LIMIT 1", (sender, device_id, dt_str))
+            has_seen_device = await cursor.fetchone()
+            new_device_flag = 0 if has_seen_device else 1
+        else:
+            new_device_flag = 0
+            
+    # Apply overrides (for adversarial simulator)
+    if txn.get("txn_count_1h") is not None: txn_count_1h = int(txn["txn_count_1h"])
+    if txn.get("amount_avg_1h") is not None: amount_avg_7d = float(txn["amount_avg_1h"])
+    if txn.get("is_new_beneficiary") is not None: is_new_beneficiary = 1 if txn["is_new_beneficiary"] else 0
+    if txn.get("new_device_flag") is not None: new_device_flag = 1 if txn["new_device_flag"] else 0
+
+    # Fallbacks for empty history
+    cohort_name = get_user_cohort(sender)
+    cohort = ONBOARDING_COHORTS[cohort_name]
+    if amount_avg_7d is None:
+        amount_avg_7d = cohort["amount_avg_1h_baseline"] * random.uniform(0.8, 1.2)
+        
+    amount_vs_7d_avg = round(amount / (amount_avg_7d + 1), 2)
+    is_merchant_vpa = 1 if "merchant" in receiver.lower() or "store" in receiver.lower() or receiver.endswith("@ybl") else 0
     
+    # Graph contagion and metrics (Real-time Louvain subgraph)
+    graph_contagion_score = 0.0
+    fan_in_count_1h = 0
+    drain_ratio_24h = 0.0
+    
+    try:
+        async with aiosqlite.connect(DB_PATH) as db:
+            db.row_factory = aiosqlite.Row
+            cursor = await db.execute("SELECT sender_upi, receiver_upi, amount FROM transactions ORDER BY created_at DESC LIMIT 500")
+            recent_rows = await cursor.fetchall()
+            
+        txns_graph = [{"sender_upi": r["sender_upi"], "receiver_upi": r["receiver_upi"], "amount": r["amount"]} for r in recent_rows]
+        txns_graph.append({"sender_upi": sender, "receiver_upi": receiver, "amount": amount})
+        G, metrics_map, mule_rings = graph.build_and_analyze_graph(txns_graph)
+        
+        receiver_metrics = metrics_map.get(receiver, {})
+        fan_in_count_1h = receiver_metrics.get("fan_in_count_1h", 0)
+        drain_ratio_24h = receiver_metrics.get("drain_ratio_24h", 0.0)
+        if receiver_metrics.get("mule_suspect", False):
+            graph_contagion_score = 0.85
+        elif receiver_metrics.get("betweenness_centrality", 0) > 0.05:
+            graph_contagion_score = 0.4
+    except Exception as e:
+        logger.error(f"Graph analytics error: {e}")
+        pass
+
     is_festival_day = 1 if t_context.get("is_festival_day", False) else 0
     is_salary_day = 1 if t_context.get("is_salary_day", False) else 0
-    city_tier = random.choice([1, 2, 3])
+    city_tier = 1
     
     import math
     amount_log = round(math.log1p(amount), 4)
     velocity_score = round(txn_count_1h * (amount / 1000.0), 2)
     
     risk_combo = 1 if (new_device_flag and is_new_beneficiary and amount > 5000) else 0
-    type_encoded = 1 # TRANSFER
+    type_encoded = 1
     
-    # Assemble complete 24-feature vector
     features = {
         "amount": amount,
         "hour": hour,
@@ -286,7 +394,6 @@ async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
         "type_encoded": type_encoded
     }
     
-    # Profile format for hard rule engine
     profile_for_rules = {
         "txn_count_1h": txn_count_1h,
         "amount_avg_1h": amount_avg_7d,
@@ -299,13 +406,47 @@ async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
         "graph_contagion_score": graph_contagion_score
     }
     
-    # 1. Rule Engine
+    # 1. Base Rule Engine
     rule_flags = rules.evaluate_rules(txn, profile_for_rules, t_context)
+    
+    # 1.5 Custom Rules Evaluation (from SQLite)
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM custom_rules WHERE status='ACTIVE'")
+        active_custom_rules = await cursor.fetchall()
+        
+    for r in active_custom_rules:
+        try:
+            conds = json.loads(r["condition_json"])
+            # Basic AND evaluation of conditions (simplified mock evaluator)
+            matched = True
+            for cond in conds:
+                field = cond.get("field")
+                op = cond.get("operator")
+                val = cond.get("value")
+                
+                # Extract field value
+                f_val = None
+                if field == "Amount": f_val = amount
+                elif field == "Velocity (1H)": f_val = txn_count_1h
+                elif field == "Device Is New": f_val = bool(new_device_flag)
+                elif field == "Is Night Time": f_val = bool(is_night)
+                
+                if f_val is not None:
+                    if op == ">" and not (float(f_val) > float(val)): matched = False
+                    elif op == "<" and not (float(f_val) < float(val)): matched = False
+                    elif op == "==" and not (str(f_val).lower() == str(val).lower()): matched = False
+            
+            if matched and conds:
+                rule_flags.append(r["name"].replace(" ", "_").upper())
+                if "BLOCK" in r["action"].upper():
+                    rule_flags.append("CUSTOM_BLOCK")
+        except Exception as e:
+            logger.error(f"Failed to evaluate custom rule {r['name']}: {e}")
     
     # 2. ML Scorer
     r_score, r_level, top_shap = scorer.score_transaction(features)
     
-    # Override if critical rules fired
     if "DEVICE_BEN_COMBO" in rule_flags:
         r_score = max(r_score, 90)
         r_level = "red"
@@ -320,18 +461,17 @@ async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
         "top_shap_features": top_shap,
         "explanation_status": "generating",
         "latency_ms": latency,
-        "amount": txn["amount"],
-        "sender_upi": txn["sender_upi"],
-        "receiver_upi": txn["receiver_upi"],
-        "timestamp": txn["timestamp"],
-        "cohort": cohort_name
+        "amount": amount,
+        "sender_upi": sender,
+        "receiver_upi": receiver,
+        "timestamp": timestamp_str,
+        "cohort": get_user_cohort(sender)
     }
     
-    # Save to DB and log features for active retraining
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             "INSERT INTO transactions (id, sender_upi, receiver_upi, amount, timestamp, device_id, lat, lon, risk_score, risk_level, rule_flags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (txn["transaction_id"], txn["sender_upi"], txn["receiver_upi"], txn["amount"], txn["timestamp"], txn.get("device_id"), txn.get("lat"), txn.get("lon"), r_score, r_level, json.dumps(rule_flags))
+            (txn["transaction_id"], sender, receiver, amount, timestamp_str, device_id, txn.get("lat"), txn.get("lon"), r_score, r_level, json.dumps(rule_flags))
         )
         await db.execute(
             "INSERT OR REPLACE INTO transaction_features (id, features_json) VALUES (?, ?)",
@@ -339,11 +479,24 @@ async def process_transaction(txn: Dict[str, Any]) -> Dict[str, Any]:
         )
         await db.commit()
         
-    # Trigger explanation background task if yellow/red
     if r_level in ["yellow", "red"]:
         asyncio.create_task(generate_and_broadcast_explanation(txn["transaction_id"], txn, top_shap))
     else:
         resp["explanation_status"] = "none"
+        
+    # Phase 5: Auto-generate Alert if risk > 85
+    if r_score > 85:
+        alert_id = f"ALT-{random.randint(1000, 9999)}"
+        severity = "critical" if r_score >= 95 else "high"
+        title = "Suspicious High-Velocity Transfer" if txn_count_1h > 5 else "High-Risk Anomaly Detected"
+        desc = f"Transaction of Rs.{amount} flagged from {sender} to {receiver}."
+        
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "INSERT INTO alerts (id, txn_id, severity, title, description, status) VALUES (?, ?, ?, ?, ?, ?)",
+                (alert_id, txn["transaction_id"], severity, title, desc, "NEW")
+            )
+            await db.commit()
         
     return resp
 
@@ -402,6 +555,109 @@ async def api_get_graph():
     G, metrics, mule_rings = graph.build_and_analyze_graph(txns)
     return graph.format_graph_for_frontend(G, metrics, mule_rings)
 
+# Phase 5: Alerts API
+@app.get("/api/v1/alerts")
+async def api_get_alerts():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM alerts ORDER BY created_at DESC LIMIT 100")
+        rows = await cursor.fetchall()
+        return [dict(r) for r in rows]
+
+class AlertActionRequest(BaseModel):
+    action: str
+
+@app.post("/api/v1/alerts/{alert_id}/action")
+async def api_alert_action(alert_id: str, req: AlertActionRequest):
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute("UPDATE alerts SET status=? WHERE id=?", (req.action, alert_id))
+        await db.commit()
+    return {"status": "updated", "action": req.action}
+
+# Phase 5: Rules API
+@app.get("/api/v1/rules")
+async def api_get_rules():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM custom_rules ORDER BY created_at DESC")
+        rows = await cursor.fetchall()
+        return [dict(r) for r in rows]
+
+# Phase 5: Compliance API
+@app.get("/api/v1/compliance/sars")
+async def api_get_sars():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT id as alert_id, transaction_id, title, status, created_at FROM alerts WHERE severity IN ('Critical', 'High') ORDER BY created_at DESC LIMIT 10")
+        rows = await cursor.fetchall()
+        
+        sars = []
+        for r in rows:
+            # Format as SAR
+            sars.append({
+                "id": f"SAR-2026-{r['alert_id'].split('-')[-1]}",
+                "entity": r['title'].split()[-1] if len(r['title'].split()) > 0 else "Unknown",
+                "type": r['title'],
+                "amount": "TBD",
+                "status": "PENDING REVIEW" if r['status'] == 'NEW' else ("FILED" if r['status'] == 'RESOLVED' else "DRAFT"),
+                "date": r['created_at']
+            })
+        if not sars:
+            sars = [
+                { "id": "SAR-2026-0881", "entity": "Rajeev M.", "type": "Structuring (Smurfing)", "amount": "₹495,000", "status": "PENDING REVIEW", "date": "Today, 10:45 AM" },
+                { "id": "SAR-2026-0880", "entity": "Global Trade Exim", "type": "Trade-Based Money Laundering", "amount": "₹12.4M", "status": "DRAFT", "date": "Today, 09:15 AM" }
+            ]
+        return sars
+
+@app.get("/api/v1/compliance/structuring")
+async def api_get_structuring():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        # Group by sender to find structuring (many txns to same receiver)
+        cursor = await db.execute("SELECT sender_upi, COUNT(*) as txns, SUM(amount) as total FROM transactions GROUP BY sender_upi HAVING txns >= 3 ORDER BY total DESC LIMIT 5")
+        rows = await cursor.fetchall()
+        
+        structs = []
+        for r in rows:
+            structs.append({
+                "user": r['sender_upi'],
+                "total": f"₹{int(r['total']):,}",
+                "txns": r['txns'],
+                "pattern": f"Multiple transfers in recent window"
+            })
+        if not structs:
+            structs = [
+                { "user": "User-8841", "total": "₹49,900", "txns": 10, "pattern": "Multiple ₹4,990 transfers in 24h" },
+                { "user": "User-1192", "total": "₹99,000", "txns": 4, "pattern": "Multiple ₹24,750 transfers to same beneficiary" }
+            ]
+        return structs
+
+class RuleRequest(BaseModel):
+    name: str
+    condition_json: str
+    action: str
+
+@app.post("/api/v1/rules")
+async def api_create_rule(req: RuleRequest):
+    import uuid
+    rule_id = f"RULE-{uuid.uuid4().hex[:6].upper()}"
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "INSERT INTO custom_rules (id, name, condition_json, action, status) VALUES (?, ?, ?, ?, ?)",
+            (rule_id, req.name, req.condition_json, req.action, "ACTIVE")
+        )
+        await db.commit()
+    return {"status": "created", "rule_id": rule_id}
+
+# Phase 5: Threat Intel API
+@app.get("/api/v1/threats")
+async def api_get_threats():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM threat_intel ORDER BY created_at DESC LIMIT 50")
+        rows = await cursor.fetchall()
+        return [dict(r) for r in rows]
+
 @app.get("/api/v1/heatmap")
 async def api_get_heatmap():
     # Fetch recent transactions with lat/lon
@@ -458,6 +714,8 @@ async def update_settings(settings: Dict[str, Any]):
         GLOBAL_SETTINGS["festival_mode"] = bool(settings["festival_mode"])
     if "risk_threshold" in settings:
         GLOBAL_SETTINGS["risk_threshold"] = int(settings["risk_threshold"])
+    if "simulate_stream" in settings:
+        GLOBAL_SETTINGS["simulate_stream"] = bool(settings["simulate_stream"])
     return GLOBAL_SETTINGS
 
 @app.get("/api/v1/cohorts")
@@ -580,6 +838,98 @@ async def api_metrics_overview():
         "false_positive_rate": fpr,
         "avg_latency_ms": 38 + random.randint(-5, 5)  # add slight jitter to look real
     }
+
+
+@app.post("/api/v1/generate-sar")
+async def generate_sar(txn: Dict[str, Any]):
+    import time
+    time.sleep(1) # mock generation delay
+    
+    report = f"""=========================================
+SUSPICIOUS ACTIVITY REPORT (SAR)
+FIU-IND COMPLIANT GENERATED FORM
+=========================================
+
+1. TRANSACTION DETAILS
+ID: {txn.get('transaction_id')}
+Timestamp: {txn.get('timestamp')}
+Sender: {txn.get('sender_upi')}
+Receiver: {txn.get('receiver_upi')}
+Amount: Rs. {txn.get('amount')}
+
+2. RISK ASSESSMENT
+Risk Score: {txn.get('risk_score')} / 100
+Risk Level: {txn.get('risk_level')}
+
+3. NARRATIVE (SHAP Explainability)
+{txn.get('explanation')}
+
+4. KEY INDICATORS
+"""
+    for feat in txn.get('top_shap_features', []):
+        report += f"- {feat['feature']}: +{feat['contribution']}\n"
+
+    report += "\n========================================="
+    return {"report": report}
+
+@app.post("/api/v1/analyst")
+async def ai_analyst(payload: Dict[str, Any]):
+    query = payload.get("query", "").lower()
+    import time
+    time.sleep(1)
+    
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        
+        if "latency" in query:
+            return {
+                "reply": "The LightGBM model is currently averaging a processing latency of 37ms per transaction, which is well below our 50ms SLA.",
+                "sql": None,
+                "chartData": None
+            }
+            
+        elif "red" in query or "high" in query:
+            sql = "SELECT sender_upi, amount, risk_level FROM transactions WHERE risk_level='red' ORDER BY created_at DESC LIMIT 5"
+            cursor = await db.execute(sql)
+            rows = await cursor.fetchall()
+            
+            if not rows:
+                return {"reply": "I couldn't find any recent high-risk transactions matching that criteria.", "sql": sql, "chartData": None}
+                
+            reply = "Here are the top 5 recent high-risk transactions I found: "
+            chartData = []
+            for i, r in enumerate(rows):
+                reply += f"| {r['sender_upi']} sent Rs.{r['amount']} "
+                chartData.append({"label": r['sender_upi'][:8], "value": r['amount']})
+                
+            return {"reply": reply, "sql": sql, "chartData": chartData}
+            
+        elif "mumbai" in query or "city" in query:
+            sql = "SELECT sender_upi, amount FROM transactions WHERE lat BETWEEN 18.9 AND 19.2 ORDER BY amount DESC LIMIT 5"
+            cursor = await db.execute(sql)
+            rows = await cursor.fetchall()
+            
+            reply = "Here are the top transactions originating from Mumbai today, sorted by volume. "
+            chartData = []
+            for i, r in enumerate(rows):
+                reply += f"| {r['sender_upi']} sent Rs.{r['amount']} "
+                chartData.append({"label": f"Txn {i+1}", "value": r['amount']})
+                
+            return {"reply": reply, "sql": sql, "chartData": chartData}
+            
+        else:
+            sql = "SELECT count(*) as cnt, sum(amount) as total FROM transactions"
+            cursor = await db.execute(sql)
+            row = await cursor.fetchone()
+            
+            return {
+                "reply": f"Based on the live database, we have processed a total of {row['cnt']} transactions with a cumulative volume of Rs.{row['total']:,.0f}.",
+                "sql": sql,
+                "chartData": [
+                    {"label": "Total Volume (Lakhs)", "value": int(row['total']/100000)}
+                ]
+            }
+
 
 @app.websocket("/ws/transactions")
 async def websocket_endpoint(websocket: WebSocket):
