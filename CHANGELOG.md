@@ -179,3 +179,4 @@
 - 2026-05-22 16:24: Add transaction latency measurement to backend
 - 2026-05-22 16:25: Display response latency in UI
 - 2026-05-22 16:27: Tweak transaction feed auto-scroll behavior
+- 2026-05-22 16:28: Fix flex-grow issue in main dashboard grid
