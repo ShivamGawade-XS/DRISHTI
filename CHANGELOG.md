@@ -148,3 +148,4 @@
 - 2026-05-22 15:32: Add slideUp and fadeIn animations
 - 2026-05-22 15:33: Apply animations to layout main wrapper
 - 2026-05-22 15:34: Update TransactionFeed with mock SHAP values for offline testing
+- 2026-05-22 15:36: Fix database insert schema to include lat, lon, device_id
