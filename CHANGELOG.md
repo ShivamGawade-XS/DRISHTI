@@ -206,3 +206,4 @@
 - 2026-05-22 14:25: Add synthetic dataset generator script
 - 2026-05-22 14:27: Write LightGBM training pipeline
 - 2026-05-22 14:28: Save initial lgbm_model.pkl artifact
+- 2026-05-22 14:29: Integrate scorer module in FastAPI
