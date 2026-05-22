@@ -225,3 +225,4 @@
 - 2026-05-22 14:59: Fix dynamic import for react-force-graph (SSR issue)
 - 2026-05-22 15:01: Map network node colors to Louvain clusters
 - 2026-05-22 15:03: Calculate betweenness centrality for mule drains
+- 2026-05-22 15:05: Design India Fraud Heatmap page
