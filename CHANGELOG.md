@@ -156,3 +156,4 @@
 - 2026-05-22 15:46: Add inline SVG icons to sidebar navigation
 - 2026-05-22 15:47: Update README with project goals and architecture
 - 2026-05-22 15:48: Write deployment instructions for Windows
+- 2026-05-22 15:50: Add APScheduler for background batch jobs
