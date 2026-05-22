@@ -3,10 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import TransactionFeed from "../../components/TransactionFeed";
 import {
-import { API_URL, WS_URL } from "@/lib/api";
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell
 } from "recharts";
+import { API_URL, WS_URL } from "@/lib/api";
 
 // ─── Animated Counter ────────────────────────────────────────────────────────
 function AnimatedNumber({ value, prefix = "", suffix = "", decimals = 0 }: {
