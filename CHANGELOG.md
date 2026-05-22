@@ -258,3 +258,4 @@
 - 2026-05-22 15:58: Add threshold multiplier for festival days in temporal.py
 - 2026-05-22 16:00: Fix time zone Z suffix parsing bug in python 3.10-
 - 2026-05-22 16:02: Refine SHAP waterfall visualization in UI
+- 2026-05-22 16:03: Add gradient borders to header stats
