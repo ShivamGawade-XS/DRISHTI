@@ -208,3 +208,4 @@
 - 2026-05-22 14:28: Save initial lgbm_model.pkl artifact
 - 2026-05-22 14:29: Integrate scorer module in FastAPI
 - 2026-05-22 14:32: Draft explainability module using SHAP
+- 2026-05-22 14:33: Connect Next.js feed to WebSocket stream
