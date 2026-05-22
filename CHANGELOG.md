@@ -114,3 +114,4 @@
 - 2026-05-22 14:34: Integrate scorer module in FastAPI
 - 2026-05-22 14:36: Draft explainability module using SHAP
 - 2026-05-22 14:37: Connect Next.js feed to WebSocket stream
+- 2026-05-22 14:38: Debug WebSocket disconnect issues
