@@ -109,3 +109,4 @@
 - 2026-05-22 14:26: Implement rules engine for heuristic fraud detection
 - 2026-05-22 14:27: Add temporal context analyzer for night bursts
 - 2026-05-22 14:28: Add synthetic dataset generator script
+- 2026-05-22 14:30: Write LightGBM training pipeline
