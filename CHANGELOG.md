@@ -120,3 +120,4 @@
 - 2026-05-22 14:44: Add toggle for English/Hindi explanation translation
 - 2026-05-22 14:46: Fix layout spacing in dashboard header
 - 2026-05-22 14:49: Add Model Health widget UI
+- 2026-05-22 14:50: Implement Risk Threshold slider inputs
