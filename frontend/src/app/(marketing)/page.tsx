@@ -73,64 +73,52 @@ export default function MarketingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             {/* Feature 1 */}
-            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
-              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
-                <div>
-                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                  </div>
-                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">Sub-50ms Risk Scorer</h4>
-                  <p className="text-[15px] text-ui-muted leading-relaxed">
-                    FastAPI backend processes transaction payloads, executes ML scorer, applies deterministic fallbacks, and outputs a response in milliseconds.
-                  </p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
-                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
-                  LGBM + XGBoost Scorer
-                </div>
+            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
+              <div>
+                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+                  Sub-50ms Risk Scorer
+                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">01</span>
+                </h4>
+                <p className="text-[15px] text-ui-muted leading-relaxed">
+                  FastAPI backend processes transaction payloads, executes ML scorer, applies deterministic fallbacks, and outputs a response in milliseconds.
+                </p>
+              </div>
+              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
+                LGBM + XGBoost Scorer
               </div>
             </div>
 
             {/* Feature 2 */}
-            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
-              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
-                <div>
-                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  </div>
-                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">Explorable Mule Graph</h4>
-                  <p className="text-[15px] text-ui-muted leading-relaxed">
-                    Continuous Louvain modularity detection isolates multi-hop mule rings funneling money out. Network topology graphs render instantly.
-                  </p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
-                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
-                  Dynamic Louvain Community
-                </div>
+            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
+              <div>
+                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+                  Explorable Mule Graph
+                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">02</span>
+                </h4>
+                <p className="text-[15px] text-ui-muted leading-relaxed">
+                  Continuous Louvain modularity detection isolates multi-hop mule rings funneling money out. Network topology graphs render instantly.
+                </p>
+              </div>
+              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
+                Dynamic Louvain Community
               </div>
             </div>
 
             {/* Feature 3 */}
-            <div className="relative group rounded-md bg-gradient-to-b from-ui-border to-transparent p-[1px] overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(235,142,75,0.1)]">
-              <div className="absolute inset-0 bg-gradient-to-br from-ui-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="h-full rounded-md bg-[#1A1917] p-8 flex flex-col justify-between relative z-10">
-                <div>
-                  <div className="w-12 h-12 bg-[#211F1D] border border-ui-border/80 rounded-sm flex items-center justify-center text-ui-accent mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-                  </div>
-                  <h4 className="text-xl font-bold text-ui-text mb-3 tracking-tight">SHAP Explainability</h4>
-                  <p className="text-[15px] text-ui-muted leading-relaxed">
-                    Converts mathematical SHAP values into simple narrative explanations in English and Hindi so operational staff can justify blocks immediately.
-                  </p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent/80 font-semibold flex items-center">
-                  <span className="w-1.5 h-1.5 bg-ui-accent rounded-full mr-2" />
-                  Dynamic SHAP translations
-                </div>
+            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
+              <div>
+                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+                  SHAP Explainability
+                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">03</span>
+                </h4>
+                <p className="text-[15px] text-ui-muted leading-relaxed">
+                  Converts mathematical SHAP values into simple narrative explanations in English and Hindi so operational staff can justify blocks immediately.
+                </p>
+              </div>
+              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
+                Dynamic SHAP translations
               </div>
             </div>
           </div>
