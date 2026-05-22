@@ -147,3 +147,4 @@
 - 2026-05-22 15:30: Fix global.css keyframes for page transition
 - 2026-05-22 15:32: Add slideUp and fadeIn animations
 - 2026-05-22 15:33: Apply animations to layout main wrapper
+- 2026-05-22 15:34: Update TransactionFeed with mock SHAP values for offline testing
