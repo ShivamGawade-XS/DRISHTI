@@ -195,3 +195,4 @@
 - 2026-05-22 14:08: Add requirements.txt for Python dependencies
 - 2026-05-22 14:09: Create database initialization logic with aiosqlite
 - 2026-05-22 14:10: Define Pydantic models for TransactionRequest
+- 2026-05-22 14:13: Setup WebSocket ConnectionManager for real-time feed
