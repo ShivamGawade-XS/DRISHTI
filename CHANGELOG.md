@@ -166,3 +166,4 @@
 - 2026-05-22 16:04: Add gradient borders to header stats
 - 2026-05-22 16:05: Animate numbers in header stats (count-up)
 - 2026-05-22 16:07: Fix text overflow in explainability narrative
+- 2026-05-22 16:09: Enhance dark mode contrast on inactive buttons
