@@ -45,30 +45,15 @@ export default function MarketingPage() {
           <span className="text-[10px] font-mono font-bold text-ui-muted uppercase tracking-widest mr-8 shrink-0">Securing Networks For</span>
           <div className="flex-1 mask-edges relative">
             <Marquee gradient={false} speed={50} pauseOnHover={true} autoFill={true}>
-              {/* Using high-quality typographic representations instead of low-res images for a crisp brutalist look */}
-              <div className="mx-8 font-black text-2xl tracking-tighter text-ui-text flex items-center">
-                <span className="text-ui-riskRed mr-1">■</span> HDFC BANK
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tighter text-ui-text flex items-center">
-                AXIS<span className="text-ui-accent ml-1 font-light">BANK</span>
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tighter text-ui-text flex items-center">
-                <span className="text-ui-accent mr-1">/</span>ICICI
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tight text-ui-text flex items-center">
-                KOTAK <span className="font-light ml-2">MAHINDRA</span>
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tighter text-[#00b9f1] flex items-center">
-                paytm
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tighter text-[#5f259f] flex items-center">
-                PhonePe
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-[0.2em] text-ui-text flex items-center uppercase">
-                Cred
-              </div>
-              <div className="mx-8 font-black text-2xl tracking-tighter text-ui-text flex items-center">
-                YES<span className="text-ui-riskRed ml-1">BANK</span>
+              <div className="flex gap-16 pr-16 items-center">
+                <img src="/logos/hdfc.svg" alt="HDFC Bank" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/axis.svg" alt="Axis Bank" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/icici.svg" alt="ICICI Bank" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/kotak.svg" alt="Kotak Mahindra" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/paytm.svg" alt="Paytm" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/phonepe.svg" alt="PhonePe" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/cred.png" alt="CRED" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                <img src="/logos/yes.png" alt="Yes Bank" className="h-8 w-auto object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
               </div>
             </Marquee>
           </div>

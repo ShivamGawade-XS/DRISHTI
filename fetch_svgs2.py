@@ -1,29 +1,25 @@
 import urllib.request
 import json
 import ssl
-import os
+import time
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
+# We will use time.sleep to avoid 429
 files = {
-    'hdfc': 'File:HDFC_Bank_Logo.svg',
-    'axis': 'File:Axis_Bank_logo.svg',
-    'icici': 'File:ICICI_Bank_Logo.svg',
-    'kotak': 'File:Kotak_Mahindra_Bank_logo.svg',
     'paytm': 'File:Paytm_logo.svg',
     'phonepe': 'File:PhonePe_Logo.svg',
-    'cred': 'File:Cred_logo.svg',
+    'cred': 'File:CRED_logo.png', # Cred doesn't have an SVG on commons, let's use the PNG or maybe just a clearbit api
     'yes': 'File:YES_Bank_Logo.svg'
 }
 
-os.makedirs('frontend/public/logos', exist_ok=True)
-
 for name, filename in files.items():
     try:
+        time.sleep(2) # avoid 429
         url = f'https://en.wikipedia.org/w/api.php?action=query&titles={filename}&prop=imageinfo&iiprop=url&format=json'
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp = urllib.request.urlopen(req, context=ctx).read()
         data = json.loads(resp)
         pages = data['query']['pages']
@@ -35,11 +31,13 @@ for name, filename in files.items():
                 
         if svg_url:
             print(f"Downloading {name} from {svg_url}...")
-            svg_req = urllib.request.Request(svg_url, headers={'User-Agent': 'Mozilla/5.0'})
+            svg_req = urllib.request.Request(svg_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
             svg_data = urllib.request.urlopen(svg_req, context=ctx).read()
-            with open(f'frontend/public/logos/{name}.svg', 'wb') as f:
+            # If it's a PNG, we'll save it as PNG
+            ext = 'png' if svg_url.endswith('.png') else 'svg'
+            with open(f'frontend/public/logos/{name}.{ext}', 'wb') as f:
                 f.write(svg_data)
-            print(f"Success! {name}.svg saved.")
+            print(f"Success! {name}.{ext} saved.")
         else:
             print(f"Could not find URL for {name}")
     except Exception as e:
