@@ -146,3 +146,4 @@
 - 2026-05-22 15:29: Update Next.js config to ignore TS errors during build
 - 2026-05-22 15:30: Fix global.css keyframes for page transition
 - 2026-05-22 15:32: Add slideUp and fadeIn animations
+- 2026-05-22 15:33: Apply animations to layout main wrapper
