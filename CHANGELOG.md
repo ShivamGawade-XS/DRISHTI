@@ -140,3 +140,4 @@
 - 2026-05-22 15:19: Add Mule Funnel and Night Burst presets
 - 2026-05-22 15:21: Bind slider states to payload generator
 - 2026-05-22 15:22: Connect adversarial form to POST /api/v1/score
+- 2026-05-22 15:23: Display rule triggers in adversarial response
