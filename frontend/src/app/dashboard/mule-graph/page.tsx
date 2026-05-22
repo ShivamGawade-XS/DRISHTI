@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { NarrativeCards } from "./components/NarrativeCards";
 import { Card } from "@/components/ui/Card";

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useState } from 'react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 // Grouped Navigation
 const navGroups = [
@@ -62,24 +63,24 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen bg-[#050505] text-[var(--text-main)] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[var(--bg-primary)] text-[var(--text-main)] overflow-hidden font-sans">
       
-      {/* Sidebar - Refined Professional Look */}
-      <aside className="w-[260px] bg-[#0a0a0a] border-r border-slate-800 flex flex-col flex-shrink-0 z-20">
+      {/* Sidebar */}
+      <aside className="w-[260px] bg-[var(--bg-surface)] border-r border-[var(--border-color)] flex flex-col flex-shrink-0 z-20">
         
         {/* Header / Logo Area */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-slate-800 shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="h-16 flex items-center justify-between px-5 border-b border-[var(--border-color)] shrink-0">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
              <div className="w-6 h-6 rounded bg-[var(--accent-copper)] flex items-center justify-center text-black font-black text-xs">
                D
              </div>
              <h1 className="text-lg font-black tracking-tight leading-none flex items-center">
-               <span className="text-white">DRISHTI</span>
+               <span className="text-[var(--text-main)]">DRISHTI</span>
              </h1>
-          </div>
+          </Link>
           <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--risk-green)]/10 border border-[var(--risk-green)]/30 rounded text-[9px] font-mono text-[var(--risk-green)] uppercase tracking-widest">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--risk-green)] animate-pulse"></span>
-            Live
+            LIVE
           </div>
         </div>
 
@@ -91,11 +92,11 @@ export default function DashboardLayout({
               {/* Collapsible Header */}
               <button 
                 onClick={() => toggleSection(group.id)}
-                className="w-full flex items-center justify-between px-2 py-1.5 text-[10px] font-mono tracking-widest text-slate-500 uppercase hover:text-slate-300 transition-colors group/header"
+                className="w-full flex items-center justify-between px-2 py-1.5 text-[10px] font-mono tracking-widest text-[var(--accent-light)] uppercase hover:text-[var(--text-main)] transition-colors group/header"
               >
                 <span>{group.label}</span>
                 <svg 
-                  className={`w-3 h-3 text-slate-600 group-hover/header:text-slate-400 transition-transform ${collapsedSections[group.id] ? '-rotate-90' : ''}`} 
+                  className={`w-3 h-3 text-[var(--accent-light)] group-hover/header:text-[var(--text-main)] transition-transform ${collapsedSections[group.id] ? '-rotate-90' : ''}`} 
                   fill="none" 
                   viewBox="0 0 24 24" 
                   stroke="currentColor"
@@ -115,15 +116,15 @@ export default function DashboardLayout({
                       href={item.href}
                       className={`flex items-center px-3 py-2 rounded-md font-medium transition-all text-[13px] relative ${
                         isActive 
-                          ? "bg-[#141414] text-white" 
-                          : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]"
+                          ? "bg-[var(--bg-card)] text-[var(--text-main)]" 
+                          : "text-[var(--accent-light)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card)]/50"
                       }`}
                     >
                       {isActive && (
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[var(--accent-copper)] rounded-r-full"></div>
                       )}
                       
-                      <div className={`${isActive ? 'text-[var(--accent-copper)]' : 'text-slate-500'}`}>
+                      <div className={`${isActive ? 'text-[var(--accent-copper)]' : 'text-[var(--accent-light)]'}`}>
                         {item.icon}
                       </div>
                       <span>{item.name}</span>
@@ -136,18 +137,18 @@ export default function DashboardLayout({
         </nav>
         
         {/* User Footer */}
-        <div className="p-4 border-t border-slate-800 shrink-0 bg-[#0a0a0a] hover:bg-[#111] transition-colors cursor-pointer group">
+        <div className="p-4 border-t border-[var(--border-color)] shrink-0 bg-[var(--bg-surface)] hover:bg-[var(--bg-card)] transition-colors cursor-pointer group">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-slate-800 to-slate-700 flex items-center justify-center font-bold text-white border border-slate-600">
+              <div className="w-8 h-8 rounded-full bg-[var(--bg-card)] flex items-center justify-center font-bold text-[var(--text-main)] border border-[var(--border-color)]">
                 OP
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-200 group-hover:text-white transition-colors">Operator-04</p>
-                <p className="text-[10px] text-slate-500">Level 3 Access</p>
+                <p className="text-xs font-bold text-[var(--text-main)] group-hover:text-[var(--accent-copper)] transition-colors">Operator-04</p>
+                <p className="text-[10px] text-[var(--accent-light)]">Level 3 Access</p>
               </div>
             </div>
-            <svg className="w-4 h-4 text-slate-600 group-hover:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[var(--accent-light)] group-hover:text-[var(--text-main)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
             </svg>
           </div>
@@ -156,24 +157,25 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-screen min-w-0 bg-[#050505]">
+      <main className="flex-1 flex flex-col h-screen min-w-0 bg-[var(--bg-primary)]">
         
         {/* Top Navbar / Utility Bar */}
-        <header className="h-16 border-b border-slate-800 bg-[#0a0a0a] flex items-center justify-between px-6 shrink-0 z-10">
+        <header className="h-16 border-b border-[var(--border-color)] bg-[var(--bg-surface)] flex items-center justify-between px-6 shrink-0 z-10">
            
-           <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+           <div className="flex items-center gap-4 text-xs font-mono text-[var(--accent-light)]">
              <span className="flex items-center gap-2">
                <span className="w-1.5 h-1.5 rounded-full bg-[var(--risk-green)]"></span>
                System Nominal
              </span>
-             <span className="text-slate-700">|</span>
+             <span className="text-[var(--border-color)]">|</span>
              <span>v2.1.0-alpha</span>
            </div>
 
            <div className="flex items-center gap-4">
-              <button className="relative text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg">
+              <ThemeToggle />
+              <button className="relative text-[var(--accent-light)] hover:text-[var(--text-main)] transition-colors p-2 hover:bg-[var(--bg-card)] rounded-lg">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--risk-red)] rounded-full border border-[#0a0a0a]"></span>
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[var(--risk-red)] rounded-full border border-[var(--bg-surface)]"></span>
               </button>
            </div>
         </header>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/ui/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function MarketingLayout({
   children,
@@ -23,18 +25,8 @@ export default function MarketingLayout({
           <div className="flex justify-between items-center h-20">
             
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
-              <Image 
-                src="/logo.png" 
-                alt="DRISHTI Logo" 
-                width={44} 
-                height={44} 
-                className="object-contain transition-transform group-hover:scale-105" 
-                priority
-              />
-              <span className="text-base font-black tracking-tighter text-[var(--text-main)]">
-                DRI<span className="text-[var(--accent-copper)]">SHTI</span>
-              </span>
+            <Link href="/" className="group transition-transform hover:-translate-y-0.5 duration-200">
+              <Logo className="w-10 h-10 group-hover:scale-105 transition-transform" />
             </Link>
             
             {/* Nav Links */}
@@ -46,7 +38,8 @@ export default function MarketingLayout({
             </nav>
             
             {/* CTA Buttons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
+              <ThemeToggle />
               <Link href="/login" className="text-sm font-bold text-[var(--text-main)] hover:text-[var(--accent-copper)] transition-colors">
                 Sign In
               </Link>
@@ -65,7 +58,7 @@ export default function MarketingLayout({
       </main>
 
       {/* Comprehensive SaaS Footer */}
-      <footer className="border-t border-[var(--border-color)] bg-[#141312] pt-16 pb-12 mt-auto">
+      <footer className="border-t border-[var(--border-color)] bg-[var(--bg-surface)] pt-16 pb-12 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">

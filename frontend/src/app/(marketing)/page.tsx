@@ -8,13 +8,13 @@ export default function MarketingPage() {
     <div className="flex flex-col items-center justify-center w-full bg-ui-bg text-ui-text font-sans selection:bg-ui-accent selection:text-white">
       
       {/* 1. HERO SECTION */}
-      <section className="w-full relative py-24 md:py-36 overflow-hidden border-b border-ui-border bg-gradient-mesh">
+      <section className="w-full relative py-24 md:py-36 overflow-hidden border-b border-ui-border bg-ui-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-start justify-center min-h-[70vh]">
           <div className="max-w-3xl space-y-8 animate-slide-up">
             <div className="inline-flex items-center space-x-2 bg-ui-accent/10 border border-ui-accent/30 rounded-full px-4 py-1.5 text-xs font-mono font-bold text-ui-accent uppercase tracking-widest">
               <span>● Live In Production</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-ui-text via-ui-text to-ui-accent">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-ui-text">
               Intercept UPI fraud in under 50ms using behavioral graph biometrics.
             </h1>
             <p className="text-base md:text-lg text-ui-muted max-w-xl leading-relaxed">
@@ -206,7 +206,7 @@ export default function MarketingPage() {
       </section>
 
       {/* 3. SOLUTIONS SECTION */}
-      <section id="solutions" className="w-full border-b border-ui-border py-24 md:py-32 bg-[#211F1D] overflow-hidden">
+      <section id="solutions" className="w-full border-b border-ui-border py-24 md:py-32 bg-ui-surface overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row-reverse gap-16 md:gap-24 items-center">
             <div className="w-full md:w-5/12 space-y-6">
@@ -221,32 +221,58 @@ export default function MarketingPage() {
               </p>
               
               <div className="space-y-4 pt-4">
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
+                <div className="group p-4 border border-ui-border bg-ui-bg hover:border-ui-accent/50 transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top" />
                   <h4 className="text-base font-bold text-ui-text mb-1">UPI Apps & FinTechs</h4>
                   <p className="text-xs text-ui-muted">Embed SDK telemetry to analyze device fingerprints and prevent SIM-swapping / OTP-relay vectors.</p>
                 </div>
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
+                <div className="group p-4 border border-ui-border bg-ui-bg hover:border-ui-accent/50 transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top" />
                   <h4 className="text-base font-bold text-ui-text mb-1">Payment Gateways</h4>
                   <p className="text-xs text-ui-muted">Route real-time payment streams through our scoring API to drop merchant chargebacks by 45%.</p>
                 </div>
-                <div className="p-4 bg-ui-card/50 border border-ui-border/60 rounded-sm">
+                <div className="group p-4 border border-ui-border bg-ui-bg hover:border-ui-accent/50 transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top" />
                   <h4 className="text-base font-bold text-ui-text mb-1">Retail Banking Core</h4>
                   <p className="text-xs text-ui-muted">Batch processing and continuous network community detection to uncover money mule networks and dormant accounts.</p>
                 </div>
               </div>
             </div>
             
-            <div className="w-full md:w-7/12 relative aspect-video bg-ui-card border border-ui-border rounded-sm flex items-center justify-center p-8 shadow-md">
-              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-ui-accent via-transparent to-transparent pointer-events-none"></div>
-              <div className="text-center space-y-4 relative z-10">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full border border-ui-riskRed bg-ui-riskRed/10 text-ui-riskRed font-mono text-xl mb-4 risk-pulse-red">
-                  85
+            {/* Mule Ring Visualization - Premium */}
+            <div className="w-full md:w-7/12 relative aspect-video border border-ui-border bg-ui-bg flex items-center justify-center p-8 overflow-hidden">
+              {/* Decorative grid */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--border-color)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30 pointer-events-none" />
+              
+              {/* Animated rings visualization */}
+              <div className="relative z-10 flex flex-col items-center gap-6">
+                <div className="flex items-center gap-4">
+                  {[1,2,3,4,5].map((i) => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-ui-border bg-ui-surface flex items-center justify-center text-[10px] font-mono text-ui-muted">
+                      N{i}
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-lg font-bold text-ui-text font-mono">Mule Ring Detected</h3>
-                <p className="text-xs text-ui-muted font-mono">Fan-in: 5 nodes • Cumulative: ₹25,000</p>
-                <div className="pt-4 flex justify-center space-x-2">
-                  <span className="px-2 py-0.5 bg-ui-riskRed/10 text-ui-riskRed text-[10px] rounded border border-ui-riskRed/20 font-mono">Target: Node #428 (Drain)</span>
-                  <span className="px-2 py-0.5 bg-ui-border/50 text-ui-muted text-[10px] rounded border border-ui-border font-mono">Modularity: 0.76</span>
+                <div className="flex items-center gap-2">
+                  {[1,2,3,4,5].map((i) => (
+                    <svg key={i} className="w-4 h-4 text-ui-accent/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                  ))}
+                </div>
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full border-2 border-ui-riskRed bg-ui-riskRed/10 flex items-center justify-center animate-pulse">
+                    <div className="text-center">
+                      <div className="text-xl font-black text-ui-riskRed font-mono">85</div>
+                      <div className="text-[8px] font-mono text-ui-riskRed uppercase tracking-widest">Drain</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center pt-2">
+                  <h3 className="text-lg font-bold text-ui-text font-mono">Mule Ring Detected</h3>
+                  <p className="text-xs text-ui-muted font-mono mt-1">Fan-in: 5 nodes • Cumulative: ₹25,000</p>
+                  <div className="pt-3 flex justify-center gap-2">
+                    <span className="px-2 py-0.5 bg-ui-riskRed/10 text-ui-riskRed text-[10px] border border-ui-riskRed/20 font-mono">Target: Node #428</span>
+                    <span className="px-2 py-0.5 bg-ui-surface text-ui-muted text-[10px] border border-ui-border font-mono">Modularity: 0.76</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -345,7 +371,7 @@ export default function MarketingPage() {
       </section>
 
       {/* 5. RESOURCES SECTION */}
-      <section id="resources" className="w-full border-b border-ui-border py-24 md:py-32 bg-[#211F1D]">
+      <section id="resources" className="w-full border-b border-ui-border py-24 md:py-32 bg-ui-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left mb-16 max-w-2xl">
             <h2 className="text-xs font-bold text-ui-accent uppercase tracking-widest font-mono mb-3">Knowledge Base</h2>
@@ -357,41 +383,61 @@ export default function MarketingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-ui-border">
             {/* Resource 1 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
-                <span className="font-mono text-xs text-ui-accent font-bold">API REFERENCE</span>
+            <div className="group bg-ui-bg p-8 md:p-10 flex flex-col justify-between min-h-[220px] hover:bg-ui-surface transition-colors duration-300 cursor-pointer relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-ui-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div>
+                <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-ui-accent border border-ui-accent/30 mb-6">API Reference</span>
+                <h4 className="text-xl font-bold text-ui-text tracking-tight group-hover:text-ui-accent transition-colors duration-300">Developer Quickstart</h4>
+                <p className="text-sm text-ui-muted mt-3 leading-relaxed">Integrate DRISHTI REST endpoints in NodeJS, Go, or Python. Learn JSON request payload schemas.</p>
               </div>
-              <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Developer Quickstart</h4>
-              <p className="text-xs text-ui-muted mt-2 leading-relaxed">Integrate DRISHTI REST endpoints in NodeJS, Go, or Python. Learn JSON request payload schemas.</p>
+              <div className="mt-6 flex items-center gap-2 text-ui-muted group-hover:text-ui-accent transition-all duration-300">
+                <span className="text-xs font-mono">Read docs</span>
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </div>
 
             {/* Resource 2 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
-                <span className="font-mono text-xs text-ui-accent font-bold">RESEARCH PAPER</span>
+            <div className="group bg-ui-bg p-8 md:p-10 flex flex-col justify-between min-h-[220px] hover:bg-ui-surface transition-colors duration-300 cursor-pointer relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-ui-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div>
+                <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-ui-accent border border-ui-accent/30 mb-6">Research Paper</span>
+                <h4 className="text-xl font-bold text-ui-text tracking-tight group-hover:text-ui-accent transition-colors duration-300">Multi-Hop Mule Ring Detection</h4>
+                <p className="text-sm text-ui-muted mt-3 leading-relaxed">Read our engineering brief on running modular Louvain clustering under strict sub-50ms execution limits.</p>
               </div>
-              <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Multi-Hop Mule Ring Detection</h4>
-              <p className="text-xs text-ui-muted mt-2 leading-relaxed">Read our engineering brief on running modular Louvain clustering under strict sub-50ms execution limits.</p>
+              <div className="mt-6 flex items-center gap-2 text-ui-muted group-hover:text-ui-accent transition-all duration-300">
+                <span className="text-xs font-mono">Read paper</span>
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </div>
 
             {/* Resource 3 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
-                <span className="font-mono text-xs text-ui-accent font-bold">CASE STUDY</span>
+            <div className="group bg-ui-bg p-8 md:p-10 flex flex-col justify-between min-h-[220px] hover:bg-ui-surface transition-colors duration-300 cursor-pointer relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-ui-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div>
+                <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-ui-accent border border-ui-accent/30 mb-6">Case Study</span>
+                <h4 className="text-xl font-bold text-ui-text tracking-tight group-hover:text-ui-accent transition-colors duration-300">Retail Bank Integration</h4>
+                <p className="text-sm text-ui-muted mt-3 leading-relaxed">How a leading Indian retail bank deployed DRISHTI to decrease its false-positive alerts by 40% in two weeks.</p>
               </div>
-              <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Retail Bank Integration</h4>
-              <p className="text-xs text-ui-muted mt-2 leading-relaxed">How a leading Indian retail bank deployed DRISHTI to decrease its false-positive alerts by 40% in two weeks.</p>
+              <div className="mt-6 flex items-center gap-2 text-ui-muted group-hover:text-ui-accent transition-all duration-300">
+                <span className="text-xs font-mono">Read case study</span>
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </div>
 
             {/* Resource 4 */}
-            <div className="group cursor-pointer">
-              <div className="aspect-video bg-ui-card border border-ui-border rounded-sm mb-4 flex items-center justify-center text-ui-muted group-hover:border-ui-accent transition-colors relative overflow-hidden">
-                <span className="font-mono text-xs text-ui-accent font-bold">EXPLANATIONS</span>
+            <div className="group bg-ui-bg p-8 md:p-10 flex flex-col justify-between min-h-[220px] hover:bg-ui-surface transition-colors duration-300 cursor-pointer relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-ui-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              <div>
+                <span className="inline-block px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-ui-accent border border-ui-accent/30 mb-6">Explanations</span>
+                <h4 className="text-xl font-bold text-ui-text tracking-tight group-hover:text-ui-accent transition-colors duration-300">Bilingual SHAP Explanations</h4>
+                <p className="text-sm text-ui-muted mt-3 leading-relaxed">Explore the dictionary mapping features to English/Hindi context-rich sentences for risk operations.</p>
               </div>
-              <h4 className="text-base font-bold text-ui-text group-hover:text-ui-accent transition-colors">Bilingual SHAP Explanations</h4>
-              <p className="text-xs text-ui-muted mt-2 leading-relaxed">Explore the dictionary mapping features to English/Hindi context-rich sentences for risk operations.</p>
+              <div className="mt-6 flex items-center gap-2 text-ui-muted group-hover:text-ui-accent transition-all duration-300">
+                <span className="text-xs font-mono">Explore</span>
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </div>
           </div>
         </div>

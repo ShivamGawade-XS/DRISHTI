@@ -39,6 +39,26 @@ html {
   --shadow-lg: 0 10px 15px -3px rgba(15, 14, 13, 0.3), 0 4px 6px -2px rgba(15, 14, 13, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
+.light {
+  /* Stark whites and soft off-whites for premium light mode */
+  --bg-primary: #FAFAFA;
+  --bg-surface: #F4F4F5;
+  --bg-card: #FFFFFF;
+  --border-color: #E4E4E7;
+  
+  /* Deep blacks for high contrast text */
+  --text-main: #09090B;
+  --accent-light: #71717A;
+  
+  /* Accents */
+  --accent-copper: #C26227; /* Slightly deeper copper for contrast on white */
+  
+  /* Shadows Layered - Darker for brutalist feel on light bg */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) var(--bg-primary);

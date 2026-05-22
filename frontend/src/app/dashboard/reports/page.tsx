@@ -85,6 +85,7 @@ export default function ReportsPage() {
           ))}
         </div>
       </div>
+      </div>
 
       {/* KPI Row */}
       <div className="grid grid-cols-4 gap-4">
