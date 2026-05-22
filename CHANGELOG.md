@@ -217,3 +217,4 @@
 - 2026-05-22 14:45: Add Model Health widget UI
 - 2026-05-22 14:46: Implement Risk Threshold slider inputs
 - 2026-05-22 14:48: Create operator decision POST endpoint
+- 2026-05-22 14:49: Add graph.py for NetworkX mule detection
