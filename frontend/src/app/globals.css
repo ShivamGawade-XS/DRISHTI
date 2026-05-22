@@ -302,3 +302,7 @@ input[type="range"]:focus-visible {
 .border-glow-amber {
   box-shadow: 0 0 20px rgba(240, 160, 75, 0.12), inset 0 0 20px rgba(240, 160, 75, 0.03);
 }
+
+.hover\:play-state-paused:hover {
+  animation-play-state: paused !important;
+}

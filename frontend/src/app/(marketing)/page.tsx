@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
-import { HdfcLogo, AxisLogo, IciciLogo, KotakLogo, PaytmLogo, PhonePeLogo, CredLogo, YesBankLogo } from "@/components/BankLogos";
 
 export default function MarketingPage() {
   return (
@@ -44,17 +43,17 @@ export default function MarketingPage() {
         <div className="max-w-7xl mx-auto px-4 flex items-center w-full">
           <span className="text-[10px] font-mono font-bold text-ui-muted uppercase tracking-widest mr-8 shrink-0">Securing Networks For</span>
           <div className="flex-1 overflow-hidden relative mask-edges">
-            <div className="flex animate-marquee whitespace-nowrap gap-16 items-center">
+            <div className="flex animate-marquee w-max hover:play-state-paused">
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex gap-16 items-center text-ui-muted opacity-60">
-                  <HdfcLogo />
-                  <AxisLogo />
-                  <IciciLogo />
-                  <KotakLogo />
-                  <PaytmLogo />
-                  <PhonePeLogo />
-                  <CredLogo />
-                  <YesBankLogo />
+                <div key={i} className="flex gap-16 pr-16 items-center opacity-60 grayscale brightness-0 invert hover:grayscale-0 hover:brightness-100 hover:invert-0 hover:opacity-100 transition-all duration-300">
+                  <img src="https://logo.clearbit.com/hdfcbank.com" alt="HDFC Bank" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/axisbank.com" alt="Axis Bank" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/icicibank.com" alt="ICICI Bank" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/kotak.com" alt="Kotak Mahindra" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/paytm.com" alt="Paytm" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/phonepe.com" alt="PhonePe" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/cred.club" alt="CRED" className="h-8 w-auto object-contain" />
+                  <img src="https://logo.clearbit.com/yesbank.in" alt="Yes Bank" className="h-8 w-auto object-contain" />
                 </div>
               ))}
             </div>
