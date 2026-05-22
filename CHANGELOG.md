@@ -105,3 +105,4 @@
 - 2026-05-22 14:17: Design transaction feed UI component
 - 2026-05-22 14:20: Create base layout with dark mode CSS
 - 2026-05-22 14:22: Add Inter and JetBrains Mono fonts
+- 2026-05-22 14:23: Refactor frontend to use standard glass-card classes
