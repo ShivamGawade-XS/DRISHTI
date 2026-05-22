@@ -247,3 +247,4 @@
 - 2026-05-22 15:39: Randomize lat/lon across Indian cities in simulator
 - 2026-05-22 15:40: Wire overview metrics to live SQLite queries
 - 2026-05-22 15:42: Update Pydantic dict() to model_dump() for v2 compat
+- 2026-05-22 15:43: Refactor layout.tsx to highlight active navigation links
