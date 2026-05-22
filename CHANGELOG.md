@@ -237,3 +237,4 @@
 - 2026-05-22 15:20: Connect adversarial form to POST /api/v1/score
 - 2026-05-22 15:21: Display rule triggers in adversarial response
 - 2026-05-22 15:22: Fix SHAP warnings in scorer.py by filtering UserWarning
+- 2026-05-22 15:25: Update Next.js config to ignore ESLint during build
