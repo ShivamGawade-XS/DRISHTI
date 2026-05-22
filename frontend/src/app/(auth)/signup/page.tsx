@@ -72,7 +72,7 @@ export default function SignupPage() {
           <h3 className="text-2xl font-bold text-[var(--text-main)] mb-2">Request Access</h3>
           <p className="text-[var(--accent-light)] text-sm mb-8">Sign up for an enterprise trial account to evaluate DRISHTI.</p>
           
-          <form onSubmit={handleSignup} className="space-y-4">
+          <div className="space-y-4" onKeyDown={(e) => e.key === 'Enter' && handleSignup(e as any)}>
             <div>
               <label className="block text-xs font-bold text-[var(--accent-light)] tracking-wide mb-1.5">FULL NAME</label>
               <input 
@@ -81,7 +81,7 @@ export default function SignupPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="Jane Doe"
               />
             </div>
@@ -94,7 +94,7 @@ export default function SignupPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="investigator@bank.com"
               />
             </div>
@@ -107,7 +107,7 @@ export default function SignupPage() {
                 value={formData.company}
                 onChange={handleChange}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="Acme Bank Corp"
               />
             </div>
@@ -120,15 +120,16 @@ export default function SignupPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
+                className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm px-4 py-2.5 text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] focus:ring-1 focus:ring-[var(--accent-copper)] transition-all placeholder-[var(--accent-light)]/30"
                 placeholder="••••••••"
               />
             </div>
             
             <button 
-              type="submit" 
+              type="button" 
+              onClick={handleSignup}
               disabled={loading}
-              className={`w-full py-3 mt-4 rounded-lg font-bold text-white transition-all shadow-lg flex justify-center items-center ${
+              className={`w-full py-3 mt-4 rounded-sm font-bold text-white transition-all shadow-lg flex justify-center items-center ${
                 loading 
                   ? 'bg-[var(--border-color)] cursor-wait' 
                   : 'bg-gradient-to-r from-[var(--accent-copper)] to-[rgba(184,115,51,0.8)] hover:to-[var(--accent-copper)] hover:shadow-[0_0_20px_rgba(184,115,51,0.3)]'
@@ -141,7 +142,7 @@ export default function SignupPage() {
                 </svg>
               ) : 'Submit Request'}
             </button>
-          </form>
+          </div>
           
           <div className="mt-8 text-center text-sm text-[var(--accent-light)]">
             Already have an account? <Link href="/login" className="text-[var(--accent-copper)] hover:text-white transition-colors font-bold">Sign In</Link>
@@ -151,3 +152,4 @@ export default function SignupPage() {
     </>
   );
 }
+
