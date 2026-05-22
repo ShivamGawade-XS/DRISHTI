@@ -234,3 +234,4 @@
 - 2026-05-22 15:14: Add OTP Relay preset to adversarial lab
 - 2026-05-22 15:16: Add Mule Funnel and Night Burst presets
 - 2026-05-22 15:18: Bind slider states to payload generator
+- 2026-05-22 15:20: Connect adversarial form to POST /api/v1/score
