@@ -229,3 +229,4 @@
 - 2026-05-22 15:07: Add react-simple-maps for geospatial visualization
 - 2026-05-22 15:08: Fix TopoJSON projection scaling for India
 - 2026-05-22 15:09: Update Heatmap to render pulsing red markers
+- 2026-05-22 15:11: Add Adversarial Simulation Lab page
