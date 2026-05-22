@@ -48,20 +48,81 @@ export default function MarketingLayout({
         {children}
       </main>
 
-      {/* Standard Footer */}
-      <footer className="border-t border-[var(--border-color)] bg-[#1e1c1b] py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <span className="text-xl font-black tracking-tighter text-[var(--accent-light)]">
-              DRI<span className="text-[var(--border-color)]">SHTI</span>
-            </span>
-            <span className="text-xs text-[var(--border-color)]">© 2026</span>
+      {/* Comprehensive SaaS Footer */}
+      <footer className="border-t border-[var(--border-color)] bg-[#141312] pt-16 pb-12 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
+            
+            {/* Brand Column */}
+            <div className="md:col-span-2 space-y-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-black tracking-tighter text-[var(--text-main)]">
+                  DRI<span className="text-[var(--accent-copper)]">SHTI</span>
+                </span>
+              </div>
+              <p className="text-xs text-[var(--accent-light)] max-w-sm leading-relaxed">
+                Real-time UPI payment fraud prevention and behavioral graph analytics. Engineered to intercept malicious transfers in under 50ms.
+              </p>
+              <div className="pt-2">
+                <p className="text-[10px] font-mono text-[var(--accent-light)] uppercase tracking-wider mb-2">Subscribe to Fraud Ops Briefing</p>
+                <div className="flex max-w-sm">
+                  <input 
+                    type="email" 
+                    placeholder="name@company.com" 
+                    className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-l-lg px-3 py-2 text-xs text-[var(--text-main)] focus:outline-none focus:border-[var(--accent-copper)] flex-1 min-w-0" 
+                  />
+                  <button className="bg-[var(--accent-copper)] hover:brightness-110 text-black font-bold text-xs px-4 rounded-r-lg transition-all">
+                    Join
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Link Column 1 - Product */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest font-mono">Product</h4>
+              <ul className="space-y-2 text-xs text-[var(--accent-light)]">
+                <li><Link href="#features" className="hover:text-[var(--text-main)] transition-colors">Core Scorer</Link></li>
+                <li><Link href="/dashboard/mule-graph" className="hover:text-[var(--text-main)] transition-colors">Mule Network Graph</Link></li>
+                <li><Link href="/dashboard/adversarial" className="hover:text-[var(--text-main)] transition-colors">Adversarial Simulator</Link></li>
+                <li><Link href="/dashboard" className="hover:text-[var(--text-main)] transition-colors">Operations Dashboard</Link></li>
+              </ul>
+            </div>
+
+            {/* Link Column 2 - Solutions */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest font-mono">Solutions</h4>
+              <ul className="space-y-2 text-xs text-[var(--accent-light)]">
+                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">UPI Apps & FinTechs</Link></li>
+                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">Payment Gateways</Link></li>
+                <li><Link href="#solutions" className="hover:text-[var(--text-main)] transition-colors">Retail Banking Core</Link></li>
+                <li><Link href="#pricing" className="hover:text-[var(--text-main)] transition-colors">Pricing Plans</Link></li>
+              </ul>
+            </div>
+
+            {/* Link Column 3 - Company & Legal */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest font-mono">Trust & Compliance</h4>
+              <ul className="space-y-2 text-xs text-[var(--accent-light)]">
+                <li><Link href="/privacy" className="hover:text-[var(--text-main)] transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-[var(--text-main)] transition-colors">Terms of Service</Link></li>
+                <li><Link href="/security" className="hover:text-[var(--text-main)] transition-colors">Security Center</Link></li>
+                <li><a href="mailto:support@drishti-security.in" className="hover:text-[var(--text-main)] transition-colors">Contact Support</a></li>
+              </ul>
+            </div>
+
           </div>
-          <div className="flex space-x-6 text-sm text-[var(--accent-light)]">
-            <Link href="#" className="hover:text-[var(--text-main)]">Privacy Policy</Link>
-            <Link href="#" className="hover:text-[var(--text-main)]">Terms of Service</Link>
-            <Link href="#" className="hover:text-[var(--text-main)]">Security</Link>
+
+          <div className="border-t border-[var(--border-color)] pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-[var(--accent-light)]">
+            <span className="mb-4 md:mb-0">© 2026 DRISHTI Payment Security Systems. All rights reserved.</span>
+            <div className="flex space-x-6">
+              <a href="https://github.com/ShivamGawade-XS/DRISHTI" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--text-main)] transition-colors font-mono">GitHub</a>
+              <a href="#" className="hover:text-[var(--text-main)] transition-colors font-mono">Twitter / X</a>
+              <a href="#" className="hover:text-[var(--text-main)] transition-colors font-mono">LinkedIn</a>
+            </div>
           </div>
+
         </div>
       </footer>
     </div>
