@@ -73,52 +73,79 @@ export default function MarketingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="flex flex-col w-full mt-16 border-t border-ui-border">
             {/* Feature 1 */}
-            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
-              <div>
-                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+            <div className="group flex flex-col md:flex-row md:items-center py-12 md:py-16 border-b border-ui-border hover:bg-[#080808] transition-colors duration-500 relative overflow-hidden px-4 md:px-8">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
+              
+              <div className="md:w-1/5 font-mono text-ui-accent/50 text-sm tracking-widest mb-6 md:mb-0 group-hover:text-ui-accent transition-colors duration-500 flex items-center">
+                <span className="w-8 h-[1px] bg-ui-accent/30 mr-4 group-hover:w-12 group-hover:bg-ui-accent transition-all duration-500" />
+                01
+              </div>
+              
+              <div className="md:w-1/3 pr-8 mb-6 md:mb-0">
+                <h4 className="text-2xl md:text-3xl font-black text-ui-text tracking-tight group-hover:translate-x-2 transition-transform duration-500">
                   Sub-50ms Risk Scorer
-                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">01</span>
                 </h4>
-                <p className="text-[15px] text-ui-muted leading-relaxed">
+                <div className="mt-4 inline-flex px-3 py-1 bg-[#111] border border-ui-border text-ui-accent/80 text-[10px] uppercase tracking-widest font-mono group-hover:border-ui-accent/50 transition-colors duration-500">
+                  LGBM + XGBoost
+                </div>
+              </div>
+              
+              <div className="md:w-5/12 md:ml-auto">
+                <p className="text-base md:text-lg text-ui-muted leading-relaxed font-light group-hover:text-ui-text/90 transition-colors duration-500">
                   FastAPI backend processes transaction payloads, executes ML scorer, applies deterministic fallbacks, and outputs a response in milliseconds.
                 </p>
-              </div>
-              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
-                LGBM + XGBoost Scorer
               </div>
             </div>
 
             {/* Feature 2 */}
-            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
-              <div>
-                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+            <div className="group flex flex-col md:flex-row md:items-center py-12 md:py-16 border-b border-ui-border hover:bg-[#080808] transition-colors duration-500 relative overflow-hidden px-4 md:px-8">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
+              
+              <div className="md:w-1/5 font-mono text-ui-accent/50 text-sm tracking-widest mb-6 md:mb-0 group-hover:text-ui-accent transition-colors duration-500 flex items-center">
+                <span className="w-8 h-[1px] bg-ui-accent/30 mr-4 group-hover:w-12 group-hover:bg-ui-accent transition-all duration-500" />
+                02
+              </div>
+              
+              <div className="md:w-1/3 pr-8 mb-6 md:mb-0">
+                <h4 className="text-2xl md:text-3xl font-black text-ui-text tracking-tight group-hover:translate-x-2 transition-transform duration-500">
                   Explorable Mule Graph
-                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">02</span>
                 </h4>
-                <p className="text-[15px] text-ui-muted leading-relaxed">
+                <div className="mt-4 inline-flex px-3 py-1 bg-[#111] border border-ui-border text-ui-accent/80 text-[10px] uppercase tracking-widest font-mono group-hover:border-ui-accent/50 transition-colors duration-500">
+                  Dynamic Louvain Community
+                </div>
+              </div>
+              
+              <div className="md:w-5/12 md:ml-auto">
+                <p className="text-base md:text-lg text-ui-muted leading-relaxed font-light group-hover:text-ui-text/90 transition-colors duration-500">
                   Continuous Louvain modularity detection isolates multi-hop mule rings funneling money out. Network topology graphs render instantly.
                 </p>
-              </div>
-              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
-                Dynamic Louvain Community
               </div>
             </div>
 
             {/* Feature 3 */}
-            <div className="group relative border border-ui-border bg-[#050505] p-8 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[-6px_6px_0_#B87333] hover:border-ui-accent cursor-default">
-              <div>
-                <h4 className="text-xl font-bold text-ui-text mb-4 tracking-tight flex justify-between items-start">
+            <div className="group flex flex-col md:flex-row md:items-center py-12 md:py-16 border-b border-ui-border hover:bg-[#080808] transition-colors duration-500 relative overflow-hidden px-4 md:px-8">
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-ui-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
+              
+              <div className="md:w-1/5 font-mono text-ui-accent/50 text-sm tracking-widest mb-6 md:mb-0 group-hover:text-ui-accent transition-colors duration-500 flex items-center">
+                <span className="w-8 h-[1px] bg-ui-accent/30 mr-4 group-hover:w-12 group-hover:bg-ui-accent transition-all duration-500" />
+                03
+              </div>
+              
+              <div className="md:w-1/3 pr-8 mb-6 md:mb-0">
+                <h4 className="text-2xl md:text-3xl font-black text-ui-text tracking-tight group-hover:translate-x-2 transition-transform duration-500">
                   SHAP Explainability
-                  <span className="text-ui-accent/40 font-mono text-sm group-hover:text-ui-accent transition-colors duration-200">03</span>
                 </h4>
-                <p className="text-[15px] text-ui-muted leading-relaxed">
+                <div className="mt-4 inline-flex px-3 py-1 bg-[#111] border border-ui-border text-ui-accent/80 text-[10px] uppercase tracking-widest font-mono group-hover:border-ui-accent/50 transition-colors duration-500">
+                  Dynamic SHAP translations
+                </div>
+              </div>
+              
+              <div className="md:w-5/12 md:ml-auto">
+                <p className="text-base md:text-lg text-ui-muted leading-relaxed font-light group-hover:text-ui-text/90 transition-colors duration-500">
                   Converts mathematical SHAP values into simple narrative explanations in English and Hindi so operational staff can justify blocks immediately.
                 </p>
-              </div>
-              <div className="mt-12 pt-4 border-t border-dashed border-ui-border/50 text-[11px] uppercase tracking-widest font-mono text-ui-accent font-semibold">
-                Dynamic SHAP translations
               </div>
             </div>
           </div>
