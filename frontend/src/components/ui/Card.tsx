@@ -6,7 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ children, className = '', hoverable = false, ...props }, ref) => {
-    const baseStyles = "bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-[var(--shadow-sm)]";
+    const baseStyles = "bg-[var(--bg-card)] border border-[var(--border-color)] rounded-sm shadow-[var(--shadow-sm)]";
     const hoverStyles = hoverable ? "transition-all duration-400 ease-out hover:border-[var(--accent-copper)] hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 cursor-pointer" : "";
     
     return (
@@ -30,3 +30,4 @@ export function CardContent({ children, className = '' }: HTMLAttributes<HTMLDiv
 export function CardFooter({ children, className = '' }: HTMLAttributes<HTMLDivElement>) {
   return <div className={`p-6 pt-0 mt-auto border-t border-[var(--border-color)] ${className}`}>{children}</div>;
 }
+
