@@ -213,3 +213,4 @@
 - 2026-05-22 14:38: Fix CORS policy for frontend-backend communication
 - 2026-05-22 14:40: Design AI Explainability Card component
 - 2026-05-22 14:41: Add toggle for English/Hindi explanation translation
+- 2026-05-22 14:43: Fix layout spacing in dashboard header
