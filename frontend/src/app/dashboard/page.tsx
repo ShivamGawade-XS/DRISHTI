@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import TransactionFeed from "../../components/TransactionFeed";
 import {
+import { API_URL, WS_URL } from "@/lib/api";
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell
 } from "recharts";
@@ -166,16 +167,16 @@ export default function Dashboard() {
   const [backendOnline, setBackendOnline] = useState(false);
 
   const fetchStats = () =>
-    fetch("http://localhost:8000/api/v1/metrics/overview")
+    fetch(`${API_URL}/api/v1/metrics/overview`)
       .then(r => r.json())
       .then(d => { setStats(d); setBackendOnline(true); })
       .catch(() => setBackendOnline(false));
   const fetchSettings = () =>
-    fetch("http://localhost:8000/api/v1/settings").then(r => r.json()).then(setSettings).catch(() => {});
+    fetch(`${API_URL}/api/v1/settings`).then(r => r.json()).then(setSettings).catch(() => {});
   const fetchTransparency = () =>
-    fetch("http://localhost:8000/api/v1/metrics/transparency").then(r => r.json()).then(setTransparency).catch(() => {});
+    fetch(`${API_URL}/api/v1/metrics/transparency`).then(r => r.json()).then(setTransparency).catch(() => {});
   const fetchAlerts = () =>
-    fetch("http://localhost:8000/api/v1/alerts")
+    fetch(`${API_URL}/api/v1/alerts`)
       .then(r => r.json())
       .then((d: any[]) => setNewAlertCount(d.filter(a => a.status === 'NEW').length))
       .catch(() => {});
@@ -188,7 +189,7 @@ export default function Dashboard() {
 
   const handleToggleFestival = () => {
     const next = !settings.festival_mode;
-    fetch("http://localhost:8000/api/v1/settings", {
+    fetch(`${API_URL}/api/v1/settings`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ festival_mode: next })
     }).then(r => r.json()).then(d => setSettings(p => ({ ...p, festival_mode: d.festival_mode }))).catch(() => {});
@@ -196,7 +197,7 @@ export default function Dashboard() {
 
   const handleToggleSimulation = () => {
     const next = !settings.simulate_stream;
-    fetch("http://localhost:8000/api/v1/settings", {
+    fetch(`${API_URL}/api/v1/settings`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ simulate_stream: next })
     }).then(r => r.json()).then(d => setSettings(p => ({ ...p, simulate_stream: d.simulate_stream }))).catch(() => {});
@@ -204,7 +205,7 @@ export default function Dashboard() {
 
   const handleRetrain = () => {
     setIsRetraining(true); setRetrainSuccess(false);
-    fetch("http://localhost:8000/api/v1/retrain", { method: "POST" })
+    fetch(`${API_URL}/api/v1/retrain`, { method: "POST" })
       .finally(() => setTimeout(() => {
         setIsRetraining(false); setRetrainSuccess(true);
         fetchSettings(); fetchTransparency();

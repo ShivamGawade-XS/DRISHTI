@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { API_URL, WS_URL } from "@/lib/api";
 
 const CITIES = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune", "Jaipur"];
 const DEVICES = ["iPhone 13", "Samsung S22", "Unknown Device", "OnePlus 9", "MacBook Pro", "Windows PC"];
@@ -81,7 +82,7 @@ export default function TransactionsPage() {
   // Initial REST fetch
   const fetchTxns = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/v1/transactions");
+      const res = await fetch(`${API_URL}/api/v1/transactions`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       if (data.length > 0) {
@@ -98,7 +99,7 @@ export default function TransactionsPage() {
     fetchTxns();
 
     const connect = () => {
-      const ws = new WebSocket("ws://localhost:8000/ws/transactions");
+      const ws = new WebSocket(`${WS_URL}/ws/transactions`);
       wsRef.current = ws;
 
       ws.onopen = () => setBackendOnline(true);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { API_URL, WS_URL } from "@/lib/api";
 
 interface Condition {
   field: string;
@@ -41,7 +42,7 @@ export default function RulesArchitectPage() {
 
   const fetchRules = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/v1/rules");
+      const res = await fetch(`${API_URL}/api/v1/rules`);
       if (!res.ok) throw new Error();
       const data: BackendRule[] = await res.json();
       setSavedRules(data);
@@ -75,7 +76,7 @@ export default function RulesArchitectPage() {
 
     if (backendOnline) {
       try {
-        const res = await fetch("http://localhost:8000/api/v1/rules", {
+        const res = await fetch(`${API_URL}/api/v1/rules`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

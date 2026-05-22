@@ -134,15 +134,41 @@ export default function MuleGraphPage() {
             nodeAutoColorBy="group"
             nodeRelSize={1}
             nodeVal={(node: any) => node.val}
-            nodeColor={(node: any): string => {
-              if (selectedRing) {
-                return node.group === selectedRing.community_id ? "#E05243" : "rgba(63, 60, 57, 0.4)";
-              }
-              return node.mule_suspect ? "#E05243" : "#6B5A4D";
+            linkDirectionalParticles={2}
+            linkDirectionalParticleWidth={1.5}
+            linkDirectionalParticleSpeed={0.01}
+            nodeCanvasObject={(node: any, ctx, globalScale) => {
+              const label = node.id;
+              const fontSize = 12/globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              
+              const isSelected = selectedRing && node.group === selectedRing.community_id;
+              const isMule = node.mule_suspect;
+              
+              const color = isSelected ? "#E05243" : (isMule ? "#E05243" : "#B8733B");
+              
+              // Glow effect
+              ctx.shadowColor = color;
+              ctx.shadowBlur = isMule ? 15 : 5;
+              ctx.fillStyle = color;
+              
+              const size = node.val ? Math.max(2, node.val / 10) : 4;
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+              ctx.fill();
+              
+              // Reset shadow for text
+              ctx.shadowBlur = 0;
+              
+              // Label
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillStyle = isMule ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.6)';
+              ctx.fillText(label, node.x, node.y + size + 4);
             }}
-            linkColor={() => "rgba(63, 60, 57, 0.6)"}
+            linkColor={() => "rgba(63, 60, 57, 0.8)"}
             linkWidth={(link: any) => Math.max(1, (link.weight || 0) / 1000)}
-            backgroundColor="#242220"
+            backgroundColor="#141414"
           />
         )}
       </Card>

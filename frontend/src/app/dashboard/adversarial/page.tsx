@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { API_URL, WS_URL } from "@/lib/api";
 
 // ─── Toggle Switch Component ──────────────────────────────────────────────────
 function Toggle({
@@ -317,7 +318,7 @@ export default function AdversarialPage() {
 
   // WS Listener for Live Explanations
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/transactions");
+    const ws = new WebSocket(`${WS_URL}/ws/transactions`);
     ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
@@ -384,7 +385,7 @@ export default function AdversarialPage() {
     setSentPayload(payload);
 
     try {
-      const res = await fetch("http://localhost:8000/api/v1/score", {
+      const res = await fetch(`${API_URL}/api/v1/score`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

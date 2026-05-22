@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { API_URL, WS_URL } from "@/lib/api";
 
 type AlertSeverity = 'critical' | 'high' | 'medium';
 type AlertStatus = 'NEW' | 'INVESTIGATING' | 'RESOLVED' | 'DISMISSED';
@@ -48,7 +49,7 @@ export default function AlertsPage() {
 
   const fetchAlerts = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/v1/alerts");
+      const res = await fetch(`${API_URL}/api/v1/alerts`);
       if (!res.ok) throw new Error("Backend unavailable");
       const data: Alert[] = await res.json();
       setAlerts(data.length > 0 ? data : MOCK_ALERTS);
@@ -73,7 +74,7 @@ export default function AlertsPage() {
 
     if (backendOnline) {
       try {
-        await fetch(`http://localhost:8000/api/v1/alerts/${id}/action`, {
+        await fetch(`${API_URL}/api/v1/alerts/${id}/action`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action }),

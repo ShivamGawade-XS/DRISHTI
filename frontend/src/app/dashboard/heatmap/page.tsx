@@ -10,6 +10,7 @@ import {
 } from "react-simple-maps";
 
 import indiaTopo from "../../../../public/india.topo.json";
+import { API_URL, WS_URL } from "@/lib/api";
 const GEO_URL = indiaTopo;
 
 const INDIAN_CITIES = [
@@ -109,7 +110,7 @@ export default function HeatmapPage() {
 
   const fetchData = useCallback(() => {
     setLoading(true);
-    fetch("http://localhost:8000/api/v1/heatmap")
+    fetch(`${API_URL}/api/v1/heatmap`)
       .then((r) => r.json())
       .then((d) => {
         if (d && d.length > 0) setPoints(d);

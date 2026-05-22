@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import ExplainabilityCard from "./ExplainabilityCard";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { API_URL, WS_URL } from "@/lib/api";
 
 export default function TransactionFeed() {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -11,7 +12,7 @@ export default function TransactionFeed() {
     let cancelled = false;
 
     // 1. Fetch real transactions from REST API first
-    fetch("http://localhost:8000/api/v1/transactions")
+    fetch(`${API_URL}/api/v1/transactions`)
       .then(r => r.json())
       .then(data => {
         if (!cancelled && Array.isArray(data) && data.length > 0) {
@@ -63,7 +64,7 @@ export default function TransactionFeed() {
 
     const connectWs = () => {
       try {
-        ws = new WebSocket("ws://localhost:8000/ws/transactions");
+        ws = new WebSocket(`${WS_URL}/ws/transactions`);
         wsRef.current = ws;
 
         ws.onmessage = (event) => {

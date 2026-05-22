@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
+import { API_URL, WS_URL } from "@/lib/api";
 
 export default function ExplainabilityCard({ txn }: { txn: any }) {
   const [lang, setLang] = useState<"en" | "hi">("en");
@@ -11,7 +12,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
   useEffect(() => {
     if (txn && txn.sender_upi) {
       setLoadingTimeline(true);
-      fetch(`http://localhost:8000/api/v1/user/${encodeURIComponent(txn.sender_upi)}/timeline`)
+      fetch(`${API_URL}/api/v1/user/${encodeURIComponent(txn.sender_upi)}/timeline`)
         .then(r => r.json())
         .then(d => {
           setTimeline(d);
@@ -40,7 +41,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
 
   const handleDecision = (choice: "block" | "allow") => {
     setIsSubmitting(true);
-    fetch("http://localhost:8000/api/v1/decision", {
+    fetch(`${API_URL}/api/v1/decision`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -64,7 +65,7 @@ export default function ExplainabilityCard({ txn }: { txn: any }) {
   const handleGenerateSAR = async () => {
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/generate-sar", {
+      const res = await fetch(`${API_URL}/api/v1/generate-sar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(txn)

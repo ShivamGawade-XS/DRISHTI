@@ -191,7 +191,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-hidden p-6 relative">
+        <div className="flex-1 overflow-y-auto p-6 relative">
           {children}
         </div>
       </main>

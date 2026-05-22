@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { API_URL, WS_URL } from "@/lib/api";
 
 interface ThreatEntry {
   id: string;
@@ -42,7 +43,7 @@ export default function ThreatIntelPage() {
 
   const fetchThreats = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/v1/threats");
+      const res = await fetch(`${API_URL}/api/v1/threats`);
       if (!res.ok) throw new Error();
       const data: ThreatEntry[] = await res.json();
       if (data.length > 0) {
