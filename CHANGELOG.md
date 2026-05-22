@@ -123,3 +123,4 @@
 - 2026-05-22 14:50: Implement Risk Threshold slider inputs
 - 2026-05-22 14:51: Create operator decision POST endpoint
 - 2026-05-22 14:54: Add graph.py for NetworkX mule detection
+- 2026-05-22 14:55: Integrate Louvain community detection
