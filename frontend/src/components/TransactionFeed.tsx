@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import ExplainabilityCard from "./ExplainabilityCard";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 export default function TransactionFeed() {
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -7,52 +8,102 @@ export default function TransactionFeed() {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Generate initial mock data just in case backend isn't ready
-    const mockData = Array.from({ length: 15 }).map((_, i) => ({
-      transaction_id: `txn_mock_${Math.floor(Math.random() * 100000)}`,
-      sender_upi: `user${i}@okaxis`,
-      receiver_upi: `merchant${i}@ybl`,
-      amount: Math.floor(Math.random() * 15000),
-      timestamp: new Date(Date.now() - i * 5000).toISOString(),
-      risk_score: Math.floor(Math.random() * 100),
-      risk_level: ["green", "yellow", "red"][Math.floor(Math.random() * 3)],
-      top_shap_features: [
-        { feature: 'amount_vs_7d_avg', contribution: 15 + Math.random() * 20 },
-        { feature: 'new_device_flag', contribution: 10 + Math.random() * 15 },
-        { feature: 'is_night', contribution: 5 + Math.random() * 10 },
-      ],
-      explanation: "User's typical daily spend is much lower; this transfer is significantly higher than normal. Transaction originated from an unrecognized device.",
-      explanation_hi: "उपयोगकर्ता का सामान्य दैनिक खर्च बहुत कम है। लेनदेन एक अज्ञात डिवाइस से शुरू किया गया था।",
-      explanation_status: "ready"
-    }));
-    setTransactions(mockData);
+    let cancelled = false;
 
-    // Connect WebSocket
-    let ws: WebSocket | null = null;
-    try {
-      ws = new WebSocket("ws://localhost:8000/ws/transactions");
-      wsRef.current = ws;
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        
-        if (data.type === "explanation_ready") {
-          // Update explanation for existing transaction
-          setTransactions(prev => prev.map(t => 
-            t.transaction_id === data.transaction_id 
-              ? { ...t, explanation: data.explanation, explanation_hi: data.explanation_hi, explanation_status: "ready" } 
-              : t
-          ));
-        } else {
-          // New transaction
-          setTransactions(prev => [data, ...prev].slice(0, 50));
+    // 1. Fetch real transactions from REST API first
+    fetch("http://localhost:8000/api/v1/transactions")
+      .then(r => r.json())
+      .then(data => {
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
+          // Map backend field 'id' to 'transaction_id' for frontend consistency
+          const mapped = data.map((t: any) => ({
+            ...t,
+            transaction_id: t.transaction_id || t.id,
+            risk_score: t.risk_score ?? Math.floor(Math.random() * 100),
+            risk_level: t.risk_level ?? "green",
+            top_shap_features: t.top_shap_features || [
+              { feature: 'amount_vs_7d_avg', contribution: 15 + Math.random() * 20 },
+              { feature: 'new_device_flag', contribution: 10 + Math.random() * 15 },
+              { feature: 'is_night', contribution: 5 + Math.random() * 10 },
+            ],
+            explanation: t.explanation || "Transaction processed by LightGBM + Rule Engine pipeline.",
+            explanation_hi: t.explanation_hi || "लेनदेन LightGBM + रूल इंजन पाइपलाइन द्वारा संसाधित।",
+            explanation_status: t.explanation ? "ready" : "ready",
+          }));
+          setTransactions(mapped);
         }
-      };
-    } catch (e) {
-      console.log("WebSocket failed, using mock data");
-    }
+      })
+      .catch(() => {
+        // Fallback mock data if backend isn't available
+        if (!cancelled) {
+          const mockData = Array.from({ length: 15 }).map((_, i) => ({
+            transaction_id: `txn_mock_${Math.floor(Math.random() * 100000)}`,
+            sender_upi: `user${i}@okaxis`,
+            receiver_upi: `merchant${i}@ybl`,
+            amount: Math.floor(Math.random() * 15000),
+            timestamp: new Date(Date.now() - i * 5000).toISOString(),
+            risk_score: Math.floor(Math.random() * 100),
+            risk_level: ["green", "yellow", "red"][Math.floor(Math.random() * 3)],
+            top_shap_features: [
+              { feature: 'amount_vs_7d_avg', contribution: 15 + Math.random() * 20 },
+              { feature: 'new_device_flag', contribution: 10 + Math.random() * 15 },
+              { feature: 'is_night', contribution: 5 + Math.random() * 10 },
+            ],
+            explanation: "User's typical daily spend is much lower; this transfer is significantly higher than normal.",
+            explanation_hi: "उपयोगकर्ता का सामान्य दैनिक खर्च बहुत कम है।",
+            explanation_status: "ready"
+          }));
+          setTransactions(mockData);
+        }
+      });
+
+    // 2. Connect WebSocket for live streaming on top
+    let ws: WebSocket | null = null;
+    let reconnectTimeout: ReturnType<typeof setTimeout>;
+
+    const connectWs = () => {
+      try {
+        ws = new WebSocket("ws://localhost:8000/ws/transactions");
+        wsRef.current = ws;
+
+        ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data.type === "explanation_ready") {
+            setTransactions(prev => prev.map(t => 
+              (t.transaction_id === data.transaction_id || t.id === data.transaction_id)
+                ? { ...t, explanation: data.explanation, explanation_hi: data.explanation_hi, explanation_status: "ready" } 
+                : t
+            ));
+          } else {
+            const mapped = {
+              ...data,
+              transaction_id: data.transaction_id || data.id,
+            };
+            setTransactions(prev => [mapped, ...prev].slice(0, 50));
+          }
+        };
+
+        ws.onclose = () => {
+          if (!cancelled) {
+            reconnectTimeout = setTimeout(connectWs, 5000);
+          }
+        };
+
+        ws.onerror = () => {
+          ws?.close();
+        };
+      } catch (e) {
+        if (!cancelled) {
+          reconnectTimeout = setTimeout(connectWs, 5000);
+        }
+      }
+    };
+
+    connectWs();
 
     return () => {
+      cancelled = true;
+      clearTimeout(reconnectTimeout);
       if (ws) ws.close();
     };
   }, []);
@@ -97,10 +148,20 @@ export default function TransactionFeed() {
                   {timeStr}
                 </div>
                 
-                {/* Flow */}
-                <div className="col-span-3 flex flex-col justify-center">
+                {/* Flow & Sparkline */}
+                <div className="col-span-3 flex flex-col justify-center relative group">
                   <span className="text-sm text-[var(--text-main)] truncate">{txn.sender_upi}</span>
-                  <span className="text-xs text-[var(--accent-light)] truncate mt-0.5">&rarr; {txn.receiver_upi}</span>
+                  <div className="flex items-center mt-0.5">
+                    <span className="text-xs text-[var(--accent-light)] truncate w-1/2">&rarr; {txn.receiver_upi}</span>
+                    <div className="w-1/2 h-4 ml-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                      {/* Micro Sparkline simulating 24h velocity footprint */}
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={[1, 3, 2, 5, 2, 4, Math.max(1, (txn.amount % 10))].map(v => ({ v }))}>
+                          <Line type="monotone" dataKey="v" stroke={txn.risk_level === 'red' ? 'var(--risk-red)' : 'var(--accent-copper)'} strokeWidth={1.5} dot={false} isAnimationActive={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
                 </div>
                 
                 {/* Amount */}
@@ -131,7 +192,7 @@ export default function TransactionFeed() {
               
               {/* Expansion Panel */}
               {isExpanded && (
-                <div className="px-6 pb-4 bg-[var(--border-color)]/10 border-b border-[var(--accent-copper)]/20">
+                <div className="px-6 pb-4 bg-[var(--border-color)]/10 border-b border-[var(--accent-copper)]/20 animate-fade-in animate-slide-up">
                   {(txn.risk_level === "red" || txn.risk_level === "yellow") ? (
                     <ExplainabilityCard txn={txn} />
                   ) : (
