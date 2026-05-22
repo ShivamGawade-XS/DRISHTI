@@ -260,3 +260,4 @@
 - 2026-05-22 16:02: Refine SHAP waterfall visualization in UI
 - 2026-05-22 16:03: Add gradient borders to header stats
 - 2026-05-22 16:05: Animate numbers in header stats (count-up)
+- 2026-05-22 16:07: Fix text overflow in explainability narrative
