@@ -161,3 +161,4 @@
 - 2026-05-22 15:54: Tweak LightGBM hyperparameters for better recall
 - 2026-05-22 15:56: Reduce false positive rate by adjusting R01 velocity rule
 - 2026-05-22 15:57: Add threshold multiplier for festival days in temporal.py
+- 2026-05-22 16:00: Fix time zone Z suffix parsing bug in python 3.10-
