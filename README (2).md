@@ -1,4 +1,5 @@
 # DRISHTI
+
 ### Detection & Real-time Intelligence for Securing Transactions in India
 
 > An AI-assisted, real-time UPI fraud and mule-account detection engine for Indian banks — explainable, bank-friendly, and built entirely on free tools.
@@ -28,6 +29,7 @@ DRISHTI is a hybrid fraud detection system designed specifically for the Indian 
 - **Model drift monitor** — PSI-based feature drift detection
 - **Live fraud heatmap** — choropleth map of India showing flagged transaction density by state
 - **Customer confirmation flow** — mock SMS/in-app alert for social-engineering prevention
+- **Desktop companion app** — local Electron-based viewer for offline demo and analysis
 
 ---
 
@@ -63,23 +65,24 @@ DRISHTI is a hybrid fraud detection system designed specifically for the Indian 
 
 ## Tech Stack (100% Free)
 
-| Layer | Tool | Cost |
-|---|---|---|
-| Backend API | FastAPI + Uvicorn | Free |
-| ML Model | LightGBM + scikit-learn | Free |
-| Explainability | SHAP | Free |
-| Graph Analytics | NetworkX + python-louvain | Free |
-| LLM Narration | Groq API (Llama 3.1 70B) | Free tier |
-| Scheduler | APScheduler | Free |
-| Database | SQLite | Free (built-in) |
-| Frontend | Next.js + Tailwind CSS | Free |
-| Charts | Recharts | Free |
-| Graph viz | react-force-graph | Free |
-| Map | react-simple-maps | Free |
-| Training | Google Colab | Free |
-| Data gen | Faker + NumPy + pandas | Free |
-| Backend host | Render.com | Free tier |
-| Frontend host | Vercel | Free tier |
+| Layer           | Tool                      | Cost            |
+| --------------- | ------------------------- | --------------- |
+| Backend API     | FastAPI + Uvicorn         | Free            |
+| ML Model        | LightGBM + scikit-learn   | Free            |
+| Explainability  | SHAP                      | Free            |
+| Graph Analytics | NetworkX + python-louvain | Free            |
+| LLM Narration   | Groq API (Llama 3.1 70B)  | Free tier       |
+| Scheduler       | APScheduler               | Free            |
+| Database        | SQLite                    | Free (built-in) |
+| Frontend        | Next.js + Tailwind CSS    | Free            |
+| Charts          | Recharts                  | Free            |
+| Graph viz       | react-force-graph         | Free            |
+| Map             | react-simple-maps         | Free            |
+| Desktop app     | Electron                  | Free            |
+| Training        | Google Colab              | Free            |
+| Data gen        | Faker + NumPy + pandas    | Free            |
+| Backend host    | Render.com                | Free tier       |
+| Frontend host   | Vercel                    | Free tier       |
 
 **Total infrastructure cost: ₹0**
 
@@ -131,12 +134,14 @@ drishti/
 │   │   └── CustomerAlertMock.tsx
 │   └── package.json
 │
-└── docs/
-    ├── README.md
-    ├── TECHSTACK.md
-    ├── DESIGN_DOC.md
-    ├── PRD.md
-    └── PROJECT_IDEA.md
+├── desktop/
+│   └── ...                      # Electron companion app for local demo
+│
+├── README.md
+├── DESIGN_DOC.md
+├── PRD.md
+├── TECHSTACK.md
+└── CHANGELOG.md
 ```
 
 ---
@@ -157,13 +162,14 @@ drishti/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/drishti.git
-cd drishti
+git clone https://github.com/ShivamGawade-XS/DRISHTI.git
+cd DRISHTI
 ```
 
 ### 2. Generate synthetic data and train the model
 
 Open `ml/notebooks/02_model_training.ipynb` in Google Colab, run all cells. This will:
+
 - Generate 100,000 synthetic UPI transactions with 5 fraud templates
 - Engineer 40+ features
 - Train LightGBM with SMOTE class balancing
@@ -209,7 +215,7 @@ Dashboard runs at `http://localhost:3000`
 
 ### Score a transaction
 
-```http
+```
 POST /api/v1/score
 Content-Type: application/json
 
@@ -245,17 +251,17 @@ Explanation arrives async via WebSocket at `ws://localhost:8000/ws/explanations/
 
 ### Get account intelligence
 
-```http
+```
 GET /api/v1/account/{upi_id}/profile
 ```
 
 ### Operator decision
 
-```http
+```
 POST /api/v1/decision
 {
   "transaction_id": "txn_abc123",
-  "decision": "block",           // block | allow | investigate
+  "decision": "block",
   "operator_id": "ops_001",
   "notes": "confirmed mule hop"
 }
@@ -324,12 +330,12 @@ DB_PATH=data/transactions.db
 
 ## Regulatory Alignment
 
-| Initiative | How DRISHTI aligns |
-|---|---|
-| RBI DPIP (Digital Payments Intelligence Platform) | Federated simulation shows cross-bank model aggregation without raw data sharing |
-| NPCI Zero Financial Frauds goal | Real-time blocking + customer confirmation targets social-engineering — #1 UPI fraud vector |
-| RBI mule account directive (2024–25) | Graph-based mule detection directly implements monitoring requirements for high-velocity accounts |
-| RBI explainability guidelines | Every decision has SHAP-driven human-readable justification for audit trail |
+| Initiative                                        | How DRISHTI aligns                                                                                |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| RBI DPIP (Digital Payments Intelligence Platform) | Federated simulation shows cross-bank model aggregation without raw data sharing                  |
+| NPCI Zero Financial Frauds goal                   | Real-time blocking + customer confirmation targets social-engineering — #1 UPI fraud vector       |
+| RBI mule account directive (2024–25)              | Graph-based mule detection directly implements monitoring requirements for high-velocity accounts |
+| RBI explainability guidelines                     | Every decision has SHAP-driven human-readable justification for audit trail                       |
 
 ---
 
