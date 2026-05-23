@@ -1,35 +1,183 @@
-# DRISHTI
+# Project Title
+DRISHTI — Detection & Real-time Intelligence for Securing Transactions in India
 
-### Detection & Real-time Intelligence for Securing Transactions in India
+## Team Name
+Matrix of Leadership
 
-> An AI-assisted, real-time UPI fraud and mule-account detection engine for Indian banks — explainable, bank-friendly, and built entirely on free tools.
+## Team Members
+- Ashwith Shetty
+- Shivam Gawade
 
----
+## Selected Domain
+AI Automation / Finance
 
-## What is DRISHTI?
+## Problem Statement
+India processes over 131 billion UPI transactions annually. However, the surge in digital payment fraud—particularly social-engineering scams, mule account networks, and fund laundering schemes—poses a significant threat to millions of users. Current fraud detection systems are either too rigid (rule-based) or completely opaque (black-box ML), making it impossible for compliance teams to explain why a transaction was flagged, and they often miss fraud patterns hidden in transaction networks. Banks need a real-time, explainable fraud detection system that:
+- Scores every transaction in under 50ms (synchronous path)
+- Explains decisions in plain English for regulatory compliance
+- Detects mule-account clusters across networks
+- Reduces false positives using dynamic peer-group baselines
 
-DRISHTI is a hybrid fraud detection system designed specifically for the Indian UPI payments ecosystem. It combines hard rule logic, a trained LightGBM model, and graph-based mule account analysis into a single lightweight API that plugs into any bank's transaction pipeline. Every flagged transaction gets a plain-English (and Hindi) explanation, and fraud-ops staff get a live dashboard to block, allow, or investigate in real time.
+## Solution
+DRISHTI is a **hybrid fraud detection engine** combining three complementary techniques:
+1. **Rule Engine** — Hard, instant filters for obvious fraud patterns (blocked banks, known fraudsters)
+2. **LightGBM ML Model** — Fast gradient-boosting scoring with feature-level explainability via SHAP
+3. **Graph Analytics** — Louvain community detection to find mule account clusters and money-flow funnels
 
----
+The system produces a risk score (RED/YELLOW/GREEN) and an AI-generated plain-English explanation for every flagged transaction. Fraud-ops staff get a live web dashboard to review, block, or appeal decisions. Every ops action feeds back as a training label for model retraining. The entire stack runs on free-tier tools, requiring ₹0 infrastructure cost.
+
+## Tech Stack Used
+- **Backend:** FastAPI + Uvicorn + Python 3.10+
+- **Frontend:** Next.js 14 (App Router) + React + TypeScript + Tailwind CSS
+- **ML / Data:** LightGBM, scikit-learn, SHAP, pandas, NumPy
+- **Graph Analytics:** NetworkX + python-louvain
+- **LLM / Explainability:** Groq API (Llama 3.1 70B) + SHAP TreeExplainer
+- **Scheduling:** APScheduler (batch mule detection every 15 min)
+- **Database:** SQLite (aiosqlite for async I/O)
+- **Charting / Visualization:** Recharts, react-force-graph-2d, react-simple-maps
+- **Desktop App:** Electron
+- **Hosting:** Render (backend), Vercel (frontend), Google Colab (training)
+
+## AI Tools Used
+- **Groq API** — Real-time LLM inference for plain-English fraud explanations
+- **SHAP (SHapley Additive exPlanations)** — Per-transaction feature attribution for LightGBM
+- **LightGBM** — Fast, interpretable gradient-boosting ML model for scoring
+- **python-louvain** — Louvain modularity-based community detection for mule clusters
+- **Google Colab** — Free GPU/CPU for model training and feature engineering
 
 ## Features
-
-- **Real-time transaction scoring** — sub-50ms risk score per UPI transaction
-- **Three-layer hybrid engine** — rules + ML + graph analytics working in tandem
-- **Explainability cards** — SHAP-driven plain-English explanations per flagged transaction
-- **Mule account detection** — graph community detection finds funnel-and-drain clusters
-- **Fraud DNA fingerprinting** — named fraud templates matched against new incidents
-- **Peer-group baseline** — each user benchmarked against a dynamic cohort, not absolute thresholds
-- **Cold-start handling** — three-tier fallback for new accounts
-- **Temporal context** — festival/salary-day threshold scaling (Diwali, Eid, salary dates)
-- **Adversarial simulation tab** — demonstrates evasion resistance (smurfing, hop laundering, sleeping mule)
-- **Precision-recall threshold slider** — lets fraud ops tune the false-positive/recall tradeoff
+- **Real-time transaction scoring** — Sub-50ms risk score (GREEN/YELLOW/RED) per UPI transaction
+- **Three-layer hybrid engine** — Rules + ML + graph analytics working in tandem
+- **SHAP-driven explainability cards** — Plain-English explanations per flagged transaction
+- **Mule account detection** — Graph community detection finds funnel-and-drain clusters
+- **Peer-group baseline** — Each user benchmarked against a dynamic cohort; reduces false positives
+- **Temporal context** — Festival/salary-day threshold scaling (Diwali, Eid, salary dates)
+- **Adversarial simulation** — Demonstrates evasion resistance (smurfing, hop laundering, sleeping mule tactics)
+- **Precision-recall tuning** — Fraud ops can slider adjust false-positive/recall tradeoff
 - **Bilingual explanations** — English and Hindi support
-- **Operator feedback loop** — every ops decision feeds back as a training label
+- **Operator feedback loop** — Every ops decision feeds back as a training label
+- **Live fraud heatmap** — Choropleth map of India showing flagged transaction density by state
+- **Customer alerts** — Mock SMS/in-app warnings for high-risk transactions
 - **Model drift monitor** — PSI-based feature drift detection
-- **Live fraud heatmap** — choropleth map of India showing flagged transaction density by state
-- **Customer confirmation flow** — mock SMS/in-app alert for social-engineering prevention
-- **Desktop companion app** — local Electron-based viewer for offline demo and analysis
+- **Desktop companion app** — Electron-based offline viewer for demo and analysis
+
+## How to Run the Project
+
+### Prerequisites
+- **Python 3.10+** (backend & ML)
+- **Node.js 18+** (frontend)
+- **Git**
+- **Groq API Key** (free tier) — sign up at https://console.groq.com
+
+### Backend Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ShivamGawade-XS/DRISHTI.git
+   cd DRISHTI/backend
+   ```
+
+2. Create a virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Create a `.env` file in the `backend/` folder:
+   ```
+   GROQ_API_KEY=your_groq_api_key_here
+   DATABASE_URL=sqlite:///drishti.db
+   ENVIRONMENT=development
+   ```
+
+5. Run the backend:
+   ```bash
+   python main.py
+   ```
+   The API will be available at `http://localhost:8000`. Visit `http://localhost:8000/docs` for the interactive API docs.
+
+### Frontend Setup
+1. Navigate to the frontend folder:
+   ```bash
+   cd ../frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env.local` file:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+   The dashboard will be available at `http://localhost:3000`.
+
+### ML / Training (Optional)
+1. Navigate to the ML folder:
+   ```bash
+   cd ../ml
+   ```
+
+2. Install ML dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Generate synthetic data and train the model:
+   ```bash
+   python generate_data.py
+   python train.py
+   ```
+   The trained model will be saved to `artifacts/` and automatically used by the backend.
+
+### Full Stack via Docker (If Available)
+```bash
+docker-compose up
+```
+
+## Demo / Screenshots
+**Live Demo URLs:**
+- **Frontend (Fraud Ops Dashboard):** https://drishti-frontend.vercel.app (or `http://localhost:3000` locally)
+- **Backend API Docs:** https://drishti-backend.onrender.com/docs (or `http://localhost:8000/docs` locally)
+
+**Key Dashboard Tabs:**
+- **Transactions Feed** — Real-time flagged transactions with risk scores and explanations
+- **Mule Graph** — Force-directed graph showing account clusters and money-flow patterns
+- **Fraud Heatmap** — Choropleth map of India with transaction density by state
+- **Adversarial Simulation** — Sandbox to test evasion tactics (smurfing, layering, etc.)
+- **Compliance Reports** — Model performance metrics and drift monitoring
+
+## Future Scope
+
+### Immediate Enhancements
+- **Federated Learning** — Aggregate models across multiple partner banks securely
+- **Mobile App** — Native iOS/Android alerts for high-risk transactions
+- **Multi-currency Support** — Extend beyond UPI to cross-border and crypto payments
+- **Real Bank Integration** — Plug into a production core-banking system with regulatory approval
+- **Live PII Data Pipeline** — Replace synthetic data with anonymized production transactions
+
+### Medium-term Roadmap
+- **GNN-based Mule Detection** — Train a Graph Neural Network (GraphSAGE/GCN) on labeled mule clusters
+- **Time-series Anomaly Detection** — LSTM/Temporal CNN for account velocity anomalies
+- **Customer Risk Scoring** — Tier customers by risk level; adjust alerts per tier
+- **API Rate Limiting & SLA Monitoring** — Production-grade SLO tracking
+- **Audit Trail & Explainability API** — Regulatory-grade evidence export (PDF/JSON)
+
+### Long-term Vision
+- **Industry Collaboration** — Propose DRISHTI as an open-source standard for Indian fintech
+- **RBI Integration** — Partner with regulators to feed fraud signals into national fraud registry
+- **Multi-rail Support** — Extend to NEFT, RTGS, Card networks, and BNPL fraud detection
+- **AI Governance Framework** — Implement fairness, bias auditing, and explainability compliance tooling
 
 ---
 
