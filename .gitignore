@@ -1,5 +1,67 @@
-node_modules/
+# ─── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
-*.db
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
 .env
+!.env.example
+
+# ─── ML artifacts ─────────────────────────────────────────────────────────────
+*.pkl
+*.joblib
+*.h5
+*.onnx
+ml/data/transactions_raw.csv
+ml/data/transactions_features.csv
+ml/data/*.csv
+
+# ─── Database ─────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+backend/data/transactions.db
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+tunnel.log
+
+# ─── Node / Next.js ───────────────────────────────────────────────────────────
+node_modules/
 .next/
+out/
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+desktop/node_modules/
+
+# ─── Environment files ────────────────────────────────────────────────────────
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/.env.local
+
+# ─── OS / editor ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ─── Dev-only scripts (do not commit) ─────────────────────────────────────────
+fetch_svgs.py
+fetch_svgs2.py
+fetch_svgs3.py
+make_commits.py
+commit_script.ps1
