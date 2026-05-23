@@ -147,8 +147,8 @@ docker-compose up
 
 ## Demo / Screenshots
 **Live Demo URLs:**
-- **Frontend (Fraud Ops Dashboard):** https://drishti-frontend.vercel.app (or `http://localhost:3000` locally)
-- **Backend API Docs:** https://drishti-backend.onrender.com/docs (or `http://localhost:8000/docs` locally)
+- **Frontend (Fraud Ops Dashboard):** https://frontend-glw67lvff-shivamgawade-xs-projects.vercel.app/dashboard
+- **Backend API Docs:** Currently unavailable due to deployment configuration (run locally at `http://localhost:8000/docs`)
 
 **Key Dashboard Tabs:**
 - **Transactions Feed** — Real-time flagged transactions with risk scores and explanations
