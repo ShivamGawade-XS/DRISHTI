@@ -11,6 +11,7 @@
 DRISHTI is a real-time fraud detection engine for UPI transactions. It operates as a lightweight API middleware layer between a bank's transaction processing system and its fraud operations team. The system produces a risk score for every UPI transaction within 50ms, generates a human-readable explanation asynchronously, and provides a live web dashboard for fraud-ops staff to act on flagged transactions.
 
 The system is designed around three core constraints:
+
 - **Latency**: Synchronous scoring must complete in under 50ms to avoid becoming a bottleneck in the payment pipeline
 - **Explainability**: Every decision must have a human-readable justification for audit trail compliance
 - **Operability**: Fraud-ops staff must be able to block, allow, or escalate any transaction with one click, and their decisions must feed back into model retraining
@@ -102,6 +103,7 @@ Runs synchronously on every transaction. Pulls account profile from SQLite cache
 **SLA**: under 5ms (pure in-memory computation + one SQLite read)
 
 **Cold-start logic:**
+
 ```
 if account.txn_count >= 30:
     use personal_history baseline
@@ -121,18 +123,18 @@ Hard-coded logical rules that fire independently of the ML model. Rules contribu
 
 **Rule definitions:**
 
-| Rule ID | Condition | Severity |
-|---|---|---|
-| R01 | `txn_count_1h > 3 AND avg_amount > 1000` | HIGH |
-| R02 | `amount > 0.95 * daily_limit AND is_new_beneficiary` | HIGH |
-| R03 | `new_device_flag AND amount > 5000 AND is_new_beneficiary` | CRITICAL |
-| R04 | `hour in [22,23,0,1,2,3,4,5] AND amount > 2000` | MEDIUM |
-| R05 | `beneficiary_age_minutes < 30 AND amount > 3000` | HIGH |
-| R06 | `mcc_mismatch AND amount > 1000` | MEDIUM |
-| R07 | `account_age_days < 7 AND amount > 2000` | HIGH |
-| R08 | `txn_count_24h > 10` | MEDIUM |
-| R09 | `amount_sum_1h > 10000` | HIGH |
-| R10 | `graph_contagion_score > 0.7` | HIGH |
+| Rule ID | Condition                                                  | Severity |
+| ------- | ---------------------------------------------------------- | -------- |
+| R01     | `txn_count_1h > 3 AND avg_amount > 1000`                   | HIGH     |
+| R02     | `amount > 0.95 * daily_limit AND is_new_beneficiary`       | HIGH     |
+| R03     | `new_device_flag AND amount > 5000 AND is_new_beneficiary` | CRITICAL |
+| R04     | `hour in [22,23,0,1,2,3,4,5] AND amount > 2000`            | MEDIUM   |
+| R05     | `beneficiary_age_minutes < 30 AND amount > 3000`           | HIGH     |
+| R06     | `mcc_mismatch AND amount > 1000`                           | MEDIUM   |
+| R07     | `account_age_days < 7 AND amount > 2000`                   | HIGH     |
+| R08     | `txn_count_24h > 10`                                       | MEDIUM   |
+| R09     | `amount_sum_1h > 10000`                                    | HIGH     |
+| R10     | `graph_contagion_score > 0.7`                              | HIGH     |
 
 **Temporal adjustment:**  
 On festival days and salary dates, thresholds for R01, R04, R09 are multiplied by a festival_multiplier (1.5–3.0× depending on event). This prevents mass false positives on Diwali, Eid, and salary disbursement days.
@@ -142,6 +144,7 @@ On festival days and salary dates, thresholds for R01, R04, R09 are multiplied b
 **Model loading:** Model `.pkl` file is loaded once at FastAPI startup into a module-level variable. Inference is ~5ms per transaction.
 
 **Training configuration:**
+
 ```python
 params = {
     "objective": "binary",
@@ -159,16 +162,18 @@ params = {
 ```
 
 **SHAP extraction per transaction:**
+
 ```python
 explainer = shap.TreeExplainer(model)
 shap_values = explainer.shap_values(feature_vector)[1]  # positive class
-top_contributors = sorted(zip(feature_names, shap_values), 
+top_contributors = sorted(zip(feature_names, shap_values),
                          key=lambda x: abs(x[1]), reverse=True)[:4]
 ```
 
 ### 3.4 Explanation Generator
 
 **Flow:**
+
 1. Scoring returns immediately with `explanation_status: "generating"`
 2. FastAPI `BackgroundTask` calls `generate_explanation(txn_id, shap_values, context)`
 3. Groq API call with structured prompt (or template fallback)
@@ -176,6 +181,7 @@ top_contributors = sorted(zip(feature_names, shap_values),
 5. Pushed to frontend via WebSocket `ws://host/ws/explanations/{txn_id}`
 
 **Prompt structure sent to Groq:**
+
 ```
 You are a fraud analyst explaining a suspicious UPI transaction in plain English.
 Transaction: ₹{amount} from {sender} to {receiver} at {time}
@@ -192,7 +198,7 @@ Be specific with numbers. Do not use jargon. Do not start with "I".
 
 **Runs every 15 minutes via APScheduler.**
 
-```python
+```
 Step 1: Query last 24h transactions from SQLite
 Step 2: Build directed graph G = networkx.DiGraph()
         - Nodes: UPI IDs
@@ -216,13 +222,13 @@ Step 7: Flag mule suspects
 
 Five named fraud templates defined from known UPI fraud patterns:
 
-| Template | Signature |
-|---|---|
-| `SCREEN_SHARE_SCAM` | new_device + high_amount + OTP-window timing |
-| `OTP_RELAY_SCAM` | rapid small transactions followed by large withdrawal |
-| `MULE_FUNNEL` | high fan_in + single large outflow within 6 hours |
-| `SOCIAL_ENG_GIFT` | new_beneficiary + festival_day + amount_10x_baseline |
-| `SLEEPING_MULE` | account_inactive_30d + sudden_high_velocity_inflow |
+| Template            | Signature                                                |
+| ------------------- | -------------------------------------------------------- |
+| `SCREEN_SHARE_SCAM` | new_device + high_amount + OTP-window timing             |
+| `OTP_RELAY_SCAM`    | rapid small transactions followed by large withdrawal    |
+| `MULE_FUNNEL`       | high fan_in + single large outflow within 6 hours        |
+| `SOCIAL_ENG_GIFT`   | new_beneficiary + festival_day + amount_10x_baseline     |
+| `SLEEPING_MULE`     | account_inactive_30d + sudden_high_velocity_inflow       |
 
 Each transaction is matched against templates using rule-based feature checks. Match → template label added to the explanation card.
 
@@ -365,8 +371,8 @@ Response (synchronous, <50ms):
   "transaction_id": string,
   "risk_score": integer,            // 0-100
   "risk_level": "green" | "yellow" | "red",
-  "rule_flags": string[],           // e.g. ["new_device", "new_beneficiary"]
-  "fraud_template": string | null,  // matched Fraud DNA template
+  "rule_flags": string[],
+  "fraud_template": string | null,
   "top_shap_features": [
     { "feature": string, "contribution": number }
   ],
@@ -377,7 +383,7 @@ Response (synchronous, <50ms):
   },
   "account_tier": "personal" | "blended" | "new_account",
   "explanation_status": "generating" | "ready",
-  "explanation": string | null,     // null if still generating
+  "explanation": string | null,
   "latency_ms": number
 }
 ```
@@ -420,7 +426,7 @@ Response:
 {
   "status": "recorded",
   "label_count_since_retrain": integer,
-  "next_retrain_trigger": integer     // labels needed to trigger retrain
+  "next_retrain_trigger": integer
 }
 ```
 
@@ -506,15 +512,15 @@ WebSocket push: explanation delivered to dashboard ← total 810ms after txn
 
 ## 7. Performance Targets
 
-| Metric | Target | Notes |
-|---|---|---|
-| Sync scoring latency (p50) | < 30ms | Rule + LightGBM inference |
-| Sync scoring latency (p99) | < 50ms | Including DB read |
-| Async explanation (p50) | < 1.5s | Groq API |
-| Async explanation (fallback) | < 10ms | Template system |
-| Batch graph analytics | < 60s | For 50K accounts |
-| Dashboard live feed lag | < 200ms | WebSocket |
-| Model retrain time | < 2 min | Incremental LightGBM |
+| Metric                       | Target  | Notes                     |
+| ---------------------------- | ------- | ------------------------- |
+| Sync scoring latency (p50)   | < 30ms  | Rule + LightGBM inference |
+| Sync scoring latency (p99)   | < 50ms  | Including DB read         |
+| Async explanation (p50)      | < 1.5s  | Groq API                  |
+| Async explanation (fallback) | < 10ms  | Template system           |
+| Batch graph analytics        | < 60s   | For 50K accounts          |
+| Dashboard live feed lag      | < 200ms | WebSocket                 |
+| Model retrain time           | < 2 min | Incremental LightGBM      |
 
 ---
 
